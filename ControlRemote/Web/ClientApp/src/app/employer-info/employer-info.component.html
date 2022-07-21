@@ -1,0 +1,35 @@
+<div class="page-selector">
+    <div class="title-page">
+        <h2>Информация о сотруднике</h2>
+    </div>
+    <div class="button-block">
+        <button [routerLink]="['/employer-list']" class="fisrt-variation-bar">
+            <h1>Назад</h1>
+        </button>
+        <button class="fisrt-variation-bar" (click)="RemoveEmployer()">
+            <h1>Удалить</h1>
+        </button>
+        <button class="second-variation-bar" (click)="UpdateEmployer()">
+            <h1>Редактировать</h1>
+        </button>
+    </div>
+    <div class="form-location">
+        <div class="form-location-object">
+            <h1>Идентификатор:</h1>
+            <h1>{{employer.id}}</h1>
+        </div>
+        <div class="form-location-object">
+            <h1>Идентификатор руководителя:</h1>
+            <h1>{{employer.managerId}}</h1>
+        </div>
+        <div class="form-location-object">
+            <h1>Имя:</h1>
+            <h1>{{employer.name}}</h1>
+        </div>
+        <div class="form-location-object">
+            <h1>Логин:</h1>
+            <h1>{{employer.login}}</h1>
+        </div>
+    </div>
+</div>
+

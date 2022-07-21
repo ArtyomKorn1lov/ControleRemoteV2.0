@@ -1,0 +1,4 @@
+EntityFrameworkCore\ и там скрипты
+enable-migrations
+add-migration
+update-database

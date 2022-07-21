@@ -1,0 +1,6 @@
+USE ControlRemote
+GO
+
+ALTER TABLE [dbo].[ActionPoint]
+	ADD [Id] [int] IDENTITY(1, 1) NOT NULL CONSTRAINT PK_Action PRIMARY KEY
+GO

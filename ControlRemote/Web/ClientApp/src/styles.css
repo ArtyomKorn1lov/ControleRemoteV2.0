@@ -1,0 +1,243 @@
+/* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: rgb(255, 255, 255);
+}
+
+p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: #2c2c2c;
+}
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    color: #2c2c2c;
+}
+
+h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    color: #2c2c2c;
+}
+
+a {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    color: #fdfdfd;
+    text-decoration: none;
+}
+
+a:hover {
+    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(145, 150, 161, 0.7), rgba(145, 150, 161, 0.7));
+}
+
+a {
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+.page-selector
+{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.fisrt-variation-bar {
+    width: 300px;
+    background: #ffa200;
+    border: 3px solid #47337b;
+    border-radius: 15px;
+    box-shadow: 0 0 10px;
+    padding: 15px;
+}
+
+.fisrt-variation-bar:hover {
+    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(145, 150, 161, 0.7), rgba(145, 150, 161, 0.7));
+}
+
+.second-variation-bar {
+    width: 300px;
+    background: #47337b;
+    border: 3px solid #ffa200;
+    border-radius: 15px;
+    box-shadow: 0 0 10px;
+    padding: 15px;
+}
+
+.second-variation-bar:hover {
+    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(66, 66, 66, 0.7), rgba(66, 66, 66, 0.7));
+}
+
+.fisrt-variation-bar h1 {
+    color: #47337b;
+}
+
+.second-variation-bar h1 {
+    color: #ffa200;
+}
+
+.auth-input {
+    text-indent: 32px;
+    outline: none;
+    width: 400px;
+    height: 50px;
+    background: #D8D8D8;
+    box-shadow: 0px 8px 42px rgba(34, 39, 47, 0.04);
+    border-radius: 16px;
+    box-shadow: 0 0 10px;
+    border: 1px solid #ffa200;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.close-img {
+    width: 20px;
+    height: 20px;
+}
+
+.close-img-pos {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.auth-head-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.auth-inputs-block {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 400px;
+}
+
+.auth-inputs-block .fisrt-variation-bar {
+    width: 400px;
+}
+
+.auth-inputs-block .second-variation-bar {
+    width: 400px;
+}
+
+.auth-inputs-block .fisrt-variation-bar + .second-variation-bar {
+    margin-top: 15px;
+}
+
+.object-location {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+.object {
+    display: flex;
+    align-items: stretch;
+}
+
+.element {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border: 5px solid #ffa200;
+    background: #47337b;
+}
+
+.element p {
+    color: #ffa200;
+}
+
+.object-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-button {
+    width: 200px;
+    background: #ffa200;
+    border: 3px solid #ffa200;
+    border-radius: 15px;
+    box-shadow: 0 0 10px;
+    padding: 5px;
+}
+
+.table-button:hover {
+    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(145, 150, 161, 0.7), rgba(145, 150, 161, 0.7));
+}
+
+.table-button h1 {
+    color: #47337b;
+}
+
+.button-block
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-location {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin-bottom: 30px;
+    margin-left: 100px;
+}
+
+.form-location-object {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-location-select {
+    text-indent: 32px;
+    outline: none;
+    width: 300px;
+    height: 50px;
+    background: #D8D8D8;
+    box-shadow: 0px 8px 42px rgba(34, 39, 47, 0.04);
+    border-radius: 16px;
+    box-shadow: 0 0 10px;
+    border: 1px solid #ffa200;
+    font-size: 20px;
+    margin-bottom: 0px;
+}
+
+.button-block + .form-location {
+    margin-top: 30px;
+}
+
+.title-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/*html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/

@@ -1,0 +1,54 @@
+<div class="page-selector">
+    <div class="title-page">
+        <h2>Список сотрудников</h2>
+    </div>
+    <div class="button-block">
+        <button class="fisrt-variation-bar" (click)="FindByName()">
+            <h1>Поиск</h1>
+        </button>
+        <input class="auth-input" type="text" placeholder="Поиск по имени сотрудника" maxlength="100" [(ngModel)]="name">
+        <button [routerLink]="['/employer-create']" class="second-variation-bar">
+            <h1>Добавить нового сотрудника</h1>
+        </button>
+    </div>
+    <div class="object-location">
+        <div class="object">
+            <div class="element">
+                <p>Идентификатор</p>
+            </div>
+            <div class="element">
+                <p>Id руководителя</p>
+            </div>
+            <div class="element">
+                <p>Имя</p>
+            </div>
+            <div class="element">
+                <p>Логин</p>
+            </div>
+            <div class="element">
+                <p>Подробнее</p>
+            </div>
+        </div>
+        <div class="object-list" *ngFor="let employer of employers">
+            <div class="object">
+                <div class="element">
+                    <p>{{employer.id}}</p>
+                </div>
+                <div class="element">
+                    <p>{{employer.managerId}}</p>
+                </div>
+                <div class="element">
+                    <p>{{employer.name}}</p>
+                </div>
+                <div class="element">
+                    <p>{{employer.login}}</p>
+                </div>
+                <div class="element">
+                    <button class="table-button" (click)="GetEmployerInfo(employer.id)">
+                        <h1>Подробнее</h1>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+.fisrt-variation-bar
+{
+    width: 200px;
+}
+
+.second-variation-bar
+{
+    width: 400px;
+}
+
+h1 + h1 {
+    margin-left: 30px;
+}

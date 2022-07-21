@@ -1,0 +1,15 @@
+<div class="page-selector">
+    <div class="close-img-pos">
+        <img class="close-img" src="assets/close.gif" mat-dialog-close>
+    </div>
+    <div class="auth-head-block">
+        <h1>Вход</h1>
+    </div>
+    <div class="auth-inputs-block">
+        <input [(ngModel)]="login" class="auth-input" type="text" placeholder="Логин" maxlength="100">
+        <input [(ngModel)]="password" class="auth-input" type="password" placeholder="Пароль" maxlength="100">
+        <button class="fisrt-variation-bar" (click)="Login()">
+            <h1>Войти</h1>
+        </button>
+    </div>
+</div>

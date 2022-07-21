@@ -1,0 +1,30 @@
+<div class="page-selector">
+    <div class="title-page">
+        <h2>Создание сотрудника</h2>
+    </div>
+    <div class="button-block">
+        <button [routerLink]="['/employer-list']" class="fisrt-variation-bar">
+            <h1>Назад</h1>
+        </button>
+        <button class="second-variation-bar" (click)="CreateEmployer()">
+            <h1>Создать</h1>
+        </button>
+    </div>
+    <div class="form-location">
+        <div class="form-location-object">
+            <h1>Имя:</h1>
+            <input [(ngModel)]="name" class="auth-input" type="text" placeholder="Имя" maxlength="100">
+        </div>
+        <div class="form-location-object">
+            <h1>Логин:</h1>
+            <input [(ngModel)]="login" class="auth-input" type="text" placeholder="Логин" maxlength="100">
+        </div>
+        <div class="form-location-object">
+            <h1>Руководитель:</h1>
+            <button class="second-variation-bar" (click)="ChoiseUser()">
+                <h1>Выбрать</h1>
+            </button>
+            <h1>{{user.name}}</h1>
+        </div>
+    </div>
+</div>
