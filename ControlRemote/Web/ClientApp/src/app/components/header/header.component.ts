@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { DialogAuthComponent } from '../dialog-auth/dialog-auth.component';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  public href: string = "";
 
-  constructor() { }
+  constructor(private router: Router, private dialog: MatDialog) { }
 
-  ngOnInit(): void {
+  public openAuthDialog(): void {
+    const dialogRef = this.dialog.open(DialogAuthComponent);
+  }
+
+  public async ngOnInit(): Promise<void> {
+    this.href = this.router.url;
   }
 
 }
