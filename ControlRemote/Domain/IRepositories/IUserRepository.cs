@@ -9,14 +9,16 @@ namespace Domain.IRepositories
 {
     public interface IUserRepository
     {
+        // авторизация
         Task<User> GetLoginModel(string login, string password);
         Task<User> GetRegisterModel(string login);
+        // для бд
         Task CreateUser(User user);
         Task<List<User>> GetUsers();
         Task UpdateUser(User user);
         Task RemoveUser(int id);
         Task<User> GetUserById(int id);
         Task<List<User>> GetUserByName(string name);
-        Task<User> GetUserByLogin(string login);
+        Task<User> GetUserByLogin(string login); //отбор по логину
     }
 }

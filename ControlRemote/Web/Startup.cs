@@ -28,42 +28,46 @@ namespace ControlRemote
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddControllers(); //отправка данных
+            services.AddScoped<IUnitOfWork, UnitOfWork>(); // синхронизация запросов к бд
+            services.AddScoped<IUserService, UserService>(); // инициализация сервисов (логика приложения)
             services.AddScoped<IEmployerService, EmployerService>();
             services.AddScoped<IRequestService, RequestService>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>(); // классы базы данных
             services.AddScoped<IEmployerRepository, EmployerRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
 
+            // аутентификация на уровне сервера
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // храним сессию 10 минут
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login"); // путь к авторизации по умолчанию
                 });
 
+            // добавление бд
             services.AddDbContext<ControlRemoteDbContext>(options =>
             {
-                string connectionString = Configuration.GetConnectionString("ControlConnection");
-                options.UseSqlServer(connectionString);
+                string connectionString = Configuration.GetConnectionString("ControlConnection"); // путь к бд
+                options.UseSqlServer(connectionString); 
             });
+            // путь одностраничного приложения
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "ClientApp/dist"; // расположен клиентский код
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // разрешение миграции базы данных
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var recipeContext = serviceScope.ServiceProvider.GetService<ControlRemoteDbContext>();
                 recipeContext.Database.Migrate();
             }
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -94,6 +98,7 @@ namespace ControlRemote
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            // скрип запуска одностраничного
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,

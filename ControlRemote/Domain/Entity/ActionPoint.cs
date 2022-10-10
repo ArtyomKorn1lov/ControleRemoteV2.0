@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
+    // точки активности
     public class ActionPoint
     {
         public int Id { get; set; }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
+    // таблицп сотрудников
     public class Employer
     {
         public int Id { get; set; }

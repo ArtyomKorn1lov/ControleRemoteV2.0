@@ -1,0 +1,26 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    max-width: 1400px;
+    min-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #F5F5F5;
+}
+
+.page__content {
+    width: 100%;
+    position: relative;
+    flex-grow: 1;
+}
+
+.page__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-radius: 10px 10px 0px 0px;
+    padding: 20px 48px;
+    background: #FDA287;
+}
