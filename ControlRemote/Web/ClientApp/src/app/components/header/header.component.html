@@ -1,7 +1,10 @@
 <div class="header">
     <div class="header__name">
         <img class="header__image" src="assets/logo.png">
-        <h1 *ngIf="href == '/'" class="name-text">Главная страница</h1>
+        <h1 *ngIf="accountService.currentUrl == '/'" class="name-text">Главная страница</h1>
+        <h1 *ngIf="accountService.currentUrl == '/user-control'" class="name-text">Управление пользователями</h1>
+        <h1 *ngIf="accountService.currentUrl == '/request-action'" class="name-text">Просмотр активности</h1>
     </div>
-    <a (click)="openAuthDialog()" class="caption-text">Войти</a>
+    <a *ngIf="!accountService.userFlag" (click)="openAuthDialog()" class="caption-text">Войти</a>
+    <a *ngIf="accountService.userFlag" (click)="logOut()" class="caption-text">Здравствуйте, {{accountService.authorize.name}}</a>
 </div>

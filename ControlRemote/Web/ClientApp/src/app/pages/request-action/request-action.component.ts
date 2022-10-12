@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  selector: 'app-request-action',
+  templateUrl: './request-action.component.html',
+  styleUrls: ['./request-action.component.css']
 })
-export class MainComponent implements OnInit {
+export class RequestActionComponent implements OnInit {
 
   constructor(private accountService: AccountService, private router: Router) { }
 

@@ -3,10 +3,21 @@
         <img src="assets/logo.png">
         <h1 class="name-text">Вход в систему</h1>
     </div>
-    <div class="dialog__content">
+    <form (ngSubmit)="authorize()" class="dialog__content">
         <h2 class="caption-text">Логин</h2>
-        <input class="primary-input" type="text">
+        <input #slectorLogin="ngModel" [(ngModel)]="login" name="login" class="primary-input" type="text" required>
+        <div class="valid-container" *ngIf="slectorLogin.invalid && slectorLogin.touched">
+            <img class="valid-container__image" src="assets/valid_mark.png">
+            <p class="valid-container__text">Обязательное поле для заполнения</p>
+        </div>
         <h2 class="caption-text">Пароль</h2>
-        <input class="primary-input" type="password">
-    </div>
+        <input #slectorPass="ngModel" [(ngModel)]="password" name="password" class="primary-input" type="password" required>
+        <div class="valid-container" *ngIf="slectorPass.invalid && slectorPass.touched">
+            <img class="valid-container__image" src="assets/valid_mark.png">
+            <p class="valid-container__text">Обязательное поле для заполнения</p>
+        </div>
+        <button (click)="authorize()" class="secondary-button">
+            <h3 class="button-text">Войти</h3>
+        </button>
+    </form>
 </div>
