@@ -54,7 +54,7 @@ namespace Web.Controllers
         }
 
         [Authorize(Roles = "admin, manager")]
-        [HttpGet("report-list{logins}/{start}/{final}")]
+        [HttpGet("report-list/{logins}/{start}/{final}")]
         public async Task<List<ActionSortByUserLoginModel>> GetByLoginEmployerForTime(List<string> logins, DateTime start, DateTime final)
         {
             List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetByLoginEmployerForTime(logins, start, final);

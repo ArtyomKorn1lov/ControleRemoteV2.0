@@ -3,18 +3,34 @@
         <img src="assets/logo.png">
         <h1 class="name-text">Создание руководителя</h1>
     </div>
-    <div class="dialog__content">
+    <form (submit)="create()" class="dialog__content">
         <h2 class="caption-text">Имя</h2>
-        <input class="primary-input" type="text">
+        <input #selectorName="ngModel" [(ngModel)]="name" name="name" class="primary-input" type="text" required>
+        <div class="valid-container" *ngIf="selectorName.invalid && selectorName.touched">
+            <img class="valid-container__image" src="assets/valid_mark.png">
+            <p class="valid-container__text">Обязательное поле для заполнения</p>
+        </div>
         <h2 class="caption-text">Логин</h2>
-        <input class="primary-input" type="text">
+        <input #selectorLogin="ngModel" [(ngModel)]="login" name="login" class="primary-input" type="text">
+        <div class="valid-container" *ngIf="selectorLogin.invalid && selectorLogin.touched">
+            <img class="valid-container__image" src="assets/valid_mark.png">
+            <p class="valid-container__text">Обязательное поле для заполнения</p>
+        </div>
         <h2 class="caption-text">Пароль</h2>
-        <input class="primary-input" type="password">
+        <input #selectorPassword="ngModel" [(ngModel)]="password" name="password" class="primary-input" type="password" required>
+        <div class="valid-container" *ngIf="selectorPassword.invalid && selectorPassword.touched">
+            <img class="valid-container__image" src="assets/valid_mark.png">
+            <p class="valid-container__text">Обязательное поле для заполнения</p>
+        </div>
         <h2 class="caption-text">Подтвердите пароль</h2>
-        <input class="primary-input" type="password">
-        <button class="secondary-button">
+        <input #selectorConfirm="ngModel" [(ngModel)]="confirmPassword" name="confirmPassword" class="primary-input" type="password" required>
+        <div class="valid-container" *ngIf="selectorConfirm.invalid && selectorConfirm.touched">
+            <img class="valid-container__image" src="assets/valid_mark.png">
+            <p class="valid-container__text">Обязательное поле для заполнения</p>
+        </div>
+        <button (click)="create()" class="secondary-button">
             <h3 class="button-text">Сохранить</h3>
         </button>
-    </div>
+    </form>
 </div>
 

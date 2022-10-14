@@ -1,1 +1,66 @@
-<p>user-control works!</p>
+<div class="content">
+    <div class="content__user-controls">
+        <div class="control -left">
+            <div class="control__title">
+                <h1 class="caption-text">Руководители групп</h1>
+                <div class="control__images">
+                    <img (click)="createUser()" class="control__image" src="assets/add.png">
+                    <img class="control__image" src="assets/edit.png">
+                    <img (click)="removeUser()" class="control__image" src="assets/remove.png">
+                    <img (click)="openSearchUserDialog()" class="control__image" src="assets/find.png">
+                </div>
+            </div>
+            <div class="control__selection">
+                <div class="control__line"></div>
+                <div class="control__text-selector -header">
+                    <div class="control__text-place">
+                        <h2 class="regular-text">Имя руководителя</h2>
+                    </div>
+                    <div class="control__text-place -right">
+                        <h2 class="regular-text">Логин руководителя</h2>
+                    </div>
+                </div>
+                <div *ngFor="let user of users; let currentIndex = index" (click)="setUserIndex(currentIndex)" 
+                    class="control__text-selector" [ngClass]="{'-active': currentIndex == userIndex}">
+                    <div class="control__text-place">
+                        <h2 class="regular-text">{{user.name}}</h2>
+                    </div>
+                    <div class="control__text-place -right">
+                        <h2 class="regular-text">{{user.login}}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control">
+            <div class="control__title">
+                <h1 class="caption-text">Аккаунты для контроля</h1>
+                <div class="control__images">
+                    <img class="control__image" src="assets/add.png">
+                    <img class="control__image" src="assets/edit.png">
+                    <img class="control__image" src="assets/remove.png">
+                    <img (click)="openSearchEmployerDialog()" class="control__image" src="assets/find.png">
+                </div>
+            </div>
+            <div class="control__selection">
+                <div class="control__line"></div>
+                <div class="control__text-selector -header">
+                    <div class="control__text-place">
+                        <h2 class="regular-text">Имя сотрудника</h2>
+                    </div>
+                    <div class="control__text-place -right">
+                        <h2 class="regular-text">Логин сотрудника</h2>
+                    </div>
+                </div>
+                <div *ngFor="let employer of employers; let currentIndex = index" (click)="setEmployerIndex(currentIndex)" 
+                    class="control__text-selector" [ngClass]="{'-active': currentIndex == employerIndex}">
+                    <div class="control__text-place">
+                        <h2 class="regular-text">{{employer.name}}</h2>
+                    </div>
+                    <div class="control__text-place -right">
+                        <h2 class="regular-text">{{employer.login}}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
