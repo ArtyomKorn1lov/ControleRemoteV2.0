@@ -5,7 +5,7 @@
                 <h1 class="caption-text">Руководители групп</h1>
                 <div class="control__images">
                     <img (click)="createUser()" class="control__image" src="assets/add.png">
-                    <img class="control__image" src="assets/edit.png">
+                    <img (click)="updateUser()" class="control__image" src="assets/edit.png">
                     <img (click)="removeUser()" class="control__image" src="assets/remove.png">
                     <img (click)="openSearchUserDialog()" class="control__image" src="assets/find.png">
                 </div>
@@ -35,9 +35,9 @@
             <div class="control__title">
                 <h1 class="caption-text">Аккаунты для контроля</h1>
                 <div class="control__images">
-                    <img class="control__image" src="assets/add.png">
-                    <img class="control__image" src="assets/edit.png">
-                    <img class="control__image" src="assets/remove.png">
+                    <img (click)="createEmployer()" class="control__image" src="assets/add.png">
+                    <img (click)="updateEmployer()" class="control__image" src="assets/edit.png">
+                    <img (click)="removeEmployer()" class="control__image" src="assets/remove.png">
                     <img (click)="openSearchEmployerDialog()" class="control__image" src="assets/find.png">
                 </div>
             </div>

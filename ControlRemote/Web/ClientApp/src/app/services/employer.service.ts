@@ -57,8 +57,12 @@ export class EmployerService {
     return this.http.get<EmployerModel>(`api/employer/by-id/${id}`);
   }
 
-  public getEmployerByName(name: string): Observable<EmployerModel[]> {
-    return this.http.get<EmployerModel[]>(`api/employer/by-name/${name}`);
+  public getEmployerByName(name: string, id: number): Observable<EmployerModel[]> {
+    return this.http.get<EmployerModel[]>(`api/employer/by-name/${name}/${id}`);
+  }
+
+  public getEmployersByManagerId(id: number): Observable<EmployerModel[]> {
+    return this.http.get<EmployerModel[]>(`api/employer/by-manager-id/${id}`);
   }
 
   public createEmployer(employer: EmployerCreateModel): Observable<string> {

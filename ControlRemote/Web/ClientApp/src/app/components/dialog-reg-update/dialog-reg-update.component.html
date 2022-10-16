@@ -1,17 +1,17 @@
 <div class="dialog">
     <div class="dialog__title">
         <img src="assets/logo.png">
-        <h1 class="name-text">Создание руководителя</h1>
+        <h1 class="name-text">Редактирование руководителя</h1>
     </div>
     <form class="dialog__content">
         <h2 class="caption-text">Имя</h2>
-        <input #selectorName="ngModel" [(ngModel)]="name" name="name" class="primary-input" type="text" required>
+        <input #selectorName="ngModel" [(ngModel)]="user.name" name="name" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="selectorName.invalid && selectorName.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
         </div>
         <h2 class="caption-text">Логин</h2>
-        <input #selectorLogin="ngModel" [(ngModel)]="login" name="login" class="primary-input" type="text" required>
+        <input #selectorLogin="ngModel" [(ngModel)]="user.login" name="login" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="selectorLogin.invalid && selectorLogin.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
@@ -28,7 +28,7 @@
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
         </div>
-        <button (click)="create()" class="secondary-button">
+        <button (click)="update()" class="secondary-button">
             <h3 class="button-text">Сохранить</h3>
         </button>
     </form>

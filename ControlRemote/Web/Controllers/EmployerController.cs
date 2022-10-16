@@ -55,10 +55,10 @@ namespace ControlRemote.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("by-name/{name}")]
-        public async Task<List<EmployerModel>> GetEmployersByName(string name)
+        [HttpGet("by-name/{name}/{id}")]
+        public async Task<List<EmployerModel>> GetEmployersByName(string name, int id)
         {
-            List<EmployerTransferCommand> employersCommands = await _employerService.GetByName(name);
+            List<EmployerTransferCommand> employersCommands = await _employerService.GetByName(name, id);
             List<EmployerModel> employersModels = employersCommands.Select(data => EmployerDtoConverter.EmployerTransferCommandConvertToEmployerModel(data)).ToList();
             if (employersModels == null)
             {
@@ -122,6 +122,19 @@ namespace ControlRemote.Controllers
             {
                 return BadRequest("error");
             }
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("by-manager-id/{id}")]
+        public async Task<List<EmployerModel>> GetEmployersByManagerId(int id)
+        {
+            List<EmployerTransferCommand> commands = await _employerService.GetByManagerId(id);
+            List<EmployerModel> models = commands.Select(data => EmployerDtoConverter.EmployerTransferCommandConvertToEmployerModel(data)).ToList();
+            if (models == null)
+            {
+                return null;
+            }
+            return models;
         }
 
         [Authorize(Roles = "admin, manager")]

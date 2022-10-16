@@ -90,11 +90,25 @@ namespace Application.Services
             }
         }
 
-        public async Task<List<EmployerTransferCommand>> GetByName(string name)
+        public async Task<List<EmployerTransferCommand>> GetByManagerId(int id)
         {
             try
             {
-                List<Employer> employersEntity = await _employerRepository.GetByName(name);
+                List<Employer> employers = await _employerRepository.GetByManagerId(id);
+                List<EmployerTransferCommand> commands = employers.Select(data => EmployerCommandConverter.EmployerEntityConvertToEmployerTransferCommand(data)).ToList();
+                return commands;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<EmployerTransferCommand>> GetByName(string name, int id)
+        {
+            try
+            {
+                List<Employer> employersEntity = await _employerRepository.GetByName(name, id);
                 List<EmployerTransferCommand> employersCommands = employersEntity.Select(data => EmployerCommandConverter.EmployerEntityConvertToEmployerTransferCommand(data)).ToList();
                 return employersCommands;
             }

@@ -13,8 +13,6 @@ export class DialogSearchComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DialogSearchComponent>) { }
 
   public async search(): Promise<void> {
-    if(this.name == "")
-      return;
     this.dialogRef.close({searchName: this.name});
   }
 

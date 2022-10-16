@@ -49,7 +49,7 @@ export class DialogRegComponent implements OnInit {
       if(data == "success") {
         alert(data);
         console.log(data);
-        this.dialogRef.close();
+        this.dialogRef.close({result: "1"});
         return;
       }
       alert("Ошибка создания пользователя");

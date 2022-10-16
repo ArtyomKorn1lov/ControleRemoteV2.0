@@ -40,9 +40,14 @@ namespace Infrastructure.Repositories
             return await _controlRemoteDbContext.Set<Employer>().FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<List<Employer>> GetByName(string name)
+        public async Task<List<Employer>> GetByManagerId(int id)
         {
-            return await _controlRemoteDbContext.Set<Employer>().Where(e => EF.Functions.Like(e.Name, "%"+name+"%")).ToListAsync();
+            return await _controlRemoteDbContext.Set<Employer>().Where(e => e.ManagerId == id).ToListAsync();
+        }
+
+        public async Task<List<Employer>> GetByName(string name, int id)
+        {
+            return await _controlRemoteDbContext.Set<Employer>().Where(e => EF.Functions.Like(e.Name, "%"+name+"%") && e.ManagerId == id).ToListAsync();
         }
 
         public async Task<List<Employer>> GetByUserLogin(string login)

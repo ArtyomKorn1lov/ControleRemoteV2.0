@@ -16,6 +16,8 @@ import { DialogEmpComponent } from './components/dialog-emp/dialog-emp.component
 import { UserControlComponent } from './pages/user-control/user-control.component';
 import { RequestActionComponent } from './pages/request-action/request-action.component';
 import { DialogSearchComponent } from './components/dialog-search/dialog-search.component';
+import { DialogRegUpdateComponent } from './components/dialog-reg-update/dialog-reg-update.component';
+import { DialogEmpUpdateComponent } from './components/dialog-emp-update/dialog-emp-update.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { DialogSearchComponent } from './components/dialog-search/dialog-search.
     DialogEmpComponent,
     UserControlComponent,
     RequestActionComponent,
-    DialogSearchComponent
+    DialogSearchComponent,
+    DialogRegUpdateComponent,
+    DialogEmpUpdateComponent
   ],
   imports: [
     BrowserModule,

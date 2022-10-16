@@ -3,7 +3,7 @@
         <img src="assets/logo.png">
         <h1 class="name-text">Вход в систему</h1>
     </div>
-    <form (ngSubmit)="authorize()" class="dialog__content">
+    <form class="dialog__content">
         <h2 class="caption-text">Логин</h2>
         <input #slectorLogin="ngModel" [(ngModel)]="login" name="login" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="slectorLogin.invalid && slectorLogin.touched">

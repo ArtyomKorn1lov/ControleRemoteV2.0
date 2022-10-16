@@ -8,6 +8,9 @@ import { DialogSearchComponent } from 'src/app/components/dialog-search/dialog-s
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DialogRegComponent } from 'src/app/components/dialog-reg/dialog-reg.component';
+import { DialogRegUpdateComponent } from 'src/app/components/dialog-reg-update/dialog-reg-update.component';
+import { DialogEmpComponent } from 'src/app/components/dialog-emp/dialog-emp.component';
+import { DialogEmpUpdateComponent } from 'src/app/components/dialog-emp-update/dialog-emp-update.component';
 
 @Component({
   selector: 'app-user-control',
@@ -23,8 +26,12 @@ export class UserControlComponent implements OnInit {
 
   constructor(private accountService: AccountService, private router: Router, private employerService: EmployerService, private dialog: MatDialog, private route: ActivatedRoute) { }
 
-  public setUserIndex(index: number): void {
+  public async setUserIndex(index: number): Promise<void> {
     this.userIndex = index;
+    const id = this.users[this.userIndex].id;
+    await this.employerService.getEmployersByManagerId(id).subscribe(data => {
+      this.employers = data;
+    });
   }
 
   public setEmployerIndex(index: number): void {
@@ -34,8 +41,11 @@ export class UserControlComponent implements OnInit {
   public async openSearchUserDialog(): Promise<void> {
     const dialogRef = this.dialog.open(DialogSearchComponent);
     dialogRef.afterClosed().subscribe(async result => {
-      if (result != undefined)
+      if (result == undefined)
+        return;
+      if (result.searchName != '')
         await this.searchUser(result.searchName);
+      await this.ngOnInit();
     });
   }
 
@@ -46,15 +56,23 @@ export class UserControlComponent implements OnInit {
   }
 
   public openSearchEmployerDialog(): void {
+    if (this.userIndex == undefined)
+      return;
     const dialogRef = this.dialog.open(DialogSearchComponent);
     dialogRef.afterClosed().subscribe(async result => {
-      if (result != undefined)
+      if (result == undefined)
+        return;
+      if (result.searchName != '')
         await this.searchEmployer(result.searchName);
+      await this.ngOnInit();
     });
   }
 
   public async searchEmployer(name: string): Promise<void> {
-    await this.employerService.getEmployerByName(name).subscribe(data => {
+    if (this.userIndex == undefined)
+      return;
+    const id = this.users[this.userIndex].id;
+    await this.employerService.getEmployerByName(name, id).subscribe(data => {
       this.employers = data;
     });
   }
@@ -63,38 +81,106 @@ export class UserControlComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogRegComponent);
     dialogRef.afterClosed().subscribe(async result => {
       if (result != undefined)
-        await this.accountService.getUsers().subscribe(data => {
+        await this.accountService.getUsers().subscribe(async data => {
           this.users = data;
         });
     });
   }
 
   public async removeUser(): Promise<void> {
-    let ok = confirm("Удалить текущую запись?");
-    if(this.userIndex == undefined)
+    if (this.userIndex == undefined)
       return;
-    if(ok) {
-      const id =  this.users[this.userIndex].id;
-      await this.accountService.deleteUser(id).subscribe(data => {
-        if(data == "success") {
+    let ok = confirm("Удалить текущую запись?");
+    if (ok) {
+      const id = this.users[this.userIndex].id;
+      await this.accountService.deleteUser(id).subscribe(async data => {
+        if (data == "success") {
           alert(data);
           console.log(data);
+          await this.ngOnInit();
           return;
         }
         alert("Ошибка удаления");
         console.log(data);
         return;
-      })
+      });
     }
+  }
+
+  public async updateUser(): Promise<void> {
+    if (this.userIndex == undefined)
+      return;
+    const id = this.users[this.userIndex].id;
+    const dialogRef = this.dialog.open(DialogRegUpdateComponent, { data: { id: id } });
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result != undefined)
+        await this.accountService.getUsers().subscribe(async data => {
+          this.users = data;
+        });
+    });
+  }
+
+  public async createEmployer(): Promise<void> {
+    if (this.userIndex == undefined) {
+      return;
+    }
+    const id = this.users[this.userIndex].id;
+    const dialogRef = this.dialog.open(DialogEmpComponent, { data: { id: id } });
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result != undefined) {
+        await this.employerService.getEmployersByManagerId(id).subscribe(data => {
+          this.employers = data;
+        });
+      }
+    });
+  }
+
+  public async removeEmployer(): Promise<void> {
+    if (this.employerIndex == undefined || this.userIndex == undefined)
+      return;
+    let ok = confirm("Удалить текущую запись?");
+    if (ok) {
+      const id = this.employers[this.employerIndex].id;
+      const managerId = this.users[this.userIndex].id;
+      await this.employerService.removeEmployer(id).subscribe(async data => {
+        if (data == "success") {
+          alert(data);
+          console.log(data);
+          await this.employerService.getEmployersByManagerId(managerId).subscribe(data => {
+            this.employers = data;
+          });
+          return;
+        }
+        alert("Ошибка удаления");
+        console.log(data);
+        return;
+      });
+    }
+  }
+
+  public async updateEmployer(): Promise<void> {
+    if (this.userIndex == undefined) {
+      return;
+    }
+    if (this.employerIndex == undefined) {
+      return;
+    }
+    const id = this.employers[this.employerIndex].id;
+    const managerId = this.users[this.userIndex].id;
+    const dialogRef = this.dialog.open(DialogEmpUpdateComponent, { data: { id: id } });
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result != undefined) {
+        await this.employerService.getEmployersByManagerId(managerId).subscribe(data => {
+          this.employers = data;
+        });
+      }
+    });
   }
 
   public async ngOnInit(): Promise<void> {
     await this.accountService.getAuthorizeModel(this.router.url);
     await this.accountService.getUsers().subscribe(data => {
       this.users = data;
-    });
-    await this.employerService.getEmployers().subscribe(data => {
-      this.employers = data;
     });
   }
 
