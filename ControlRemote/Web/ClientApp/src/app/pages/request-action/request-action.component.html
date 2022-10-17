@@ -1,1 +1,18 @@
-<p>request-action works!</p>
+<div class="content">
+    <div class="action">
+        <div class="action__controls">
+            <h1 class="regular-text indent-right">Выбрать для просмотра:</h1>
+            <select (change)="getRequest()" class="select-filter flex-primary indent-right" [(ngModel)]="selectedLogin">
+                <option class="select-filter__option" *ngFor="let login of logins" value="{{login}}">{{login}}</option>
+            </select>
+            <h1 class="regular-text indent-right">Интервал для просмотра:</h1>
+            <input class="input-time indent-right" type="date" [(ngModel)]="startDate">
+            <h1 class="regular-text indent-right"> - </h1>
+            <input class="input-time" type="date" [(ngModel)]="endDate">
+        </div>
+        <div class="action__time-interval">
+            <h2 class="micro-text">Минуты</h2>
+            <h2 class="micro-text -filled" *ngFor="let minute of minuteArray">{{minute}}</h2>
+        </div>
+    </div>
+</div>

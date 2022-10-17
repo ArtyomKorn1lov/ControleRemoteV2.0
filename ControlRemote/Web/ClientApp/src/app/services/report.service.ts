@@ -10,7 +10,7 @@ export class ReportService {
 
   constructor(private http: HttpClient) { }
 
-  public getAllForTime(start: Date, final: Date): Observable<ActionSortByUserLoginModel[]> {
+  public getAllForTime(start: string, final: string): Observable<ActionSortByUserLoginModel[]> {
     return this.http.get<ActionSortByUserLoginModel[]>(`api/report/report-list/${start}/${final}`);
   }
 }

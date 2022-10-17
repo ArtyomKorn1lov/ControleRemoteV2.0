@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
         public async Task<List<ActionPoint>> GetByLoginEmployerForTime(string login, DateTime startDateTime, DateTime finalDateTime)
         {
             return await _controlRemoteDbContext.Set<ActionPoint>()
-                .Where(d => d.UserLogin == login && (d.DateTimeAction >= startDateTime && d.DateTimeAction < finalDateTime))
+                .Where(d => EF.Functions.Like(d.UserLogin, "%"+login+"%") && (d.DateTimeAction >= startDateTime && d.DateTimeAction < finalDateTime))
                 .OrderBy(d => d.UserLogin)
                 .ThenBy(d => d.DateTimeAction)
                 .ToListAsync();

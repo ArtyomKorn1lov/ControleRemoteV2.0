@@ -19,7 +19,7 @@ export class MainComponent implements OnInit {
     if(this.accountService.authorize.type == "admin")
       this.router.navigateByUrl(this.controlUrl);
     if(this.accountService.authorize.type == "manager")
-      this.router.navigateByUrl(this.controlUrl);
+      this.router.navigateByUrl(this.requestUrl);
   }
 
   public async ngOnInit(): Promise<void> {

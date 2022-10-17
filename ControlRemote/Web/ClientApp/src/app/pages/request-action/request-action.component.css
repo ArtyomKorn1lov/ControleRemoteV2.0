@@ -1,0 +1,11 @@
+.select-filter {
+    min-width: 200px;
+}
+
+.flex-primary {
+    flex: 2;
+}
+
+.indent-right {
+    margin-right: 28px;
+}
