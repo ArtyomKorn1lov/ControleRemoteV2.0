@@ -99,11 +99,36 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 51px 20px 5px 60px;
+    padding: 51px 20px 5px 45px;
     border-bottom: 1px solid #7365A2;
 }
 
 .micro-text.-filled {
     line-height: 18px;
     background: #E8E7E7;
+}
+
+.action__account {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 0;
+    border-bottom: 1px solid #7365A2;
+}
+
+.action__date {
+    display: flex;
+    flex-direction: column;
+    padding: 7px 20px 0 20px;
+}
+
+.action__hour {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0 0 40px; 
+}
+
+.action__point {
+    width: 10px;
+    height: 25px;
 }

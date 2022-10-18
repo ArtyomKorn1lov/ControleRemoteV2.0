@@ -9,3 +9,19 @@
 .indent-right {
     margin-right: 28px;
 }
+
+.regular-text.-hour {
+    color: #EB6D79;
+}
+
+.action__point.-usual {
+    background: #E8E7E7;
+}
+
+.action__point.-action {
+    background: #EB6D79;
+}
+
+.action__point.-image {
+    background: #49C9A7;
+}

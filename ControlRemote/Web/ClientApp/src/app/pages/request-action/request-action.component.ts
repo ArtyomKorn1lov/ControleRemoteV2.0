@@ -36,7 +36,19 @@ export class RequestActionComponent implements OnInit {
       await this.reportService.getAllForTime(start, final).subscribe(data => {
         this.actions = data;
         console.log(this.actions);
+        this.convertToNormalDate();
       });
+    }
+  }
+
+  public convertToNormalDate(): void {
+    for(let count_action = 0; count_action < this.actions.length; count_action++) {
+      for(let count_day = 0; count_day < this.actions[count_action].commands.length; count_day++) {
+        this.actions[count_action].commands[count_day].dateTimeAction = new Date(this.actions[count_action].commands[count_day].dateTimeAction);
+        for(let count_hour = 0; count_hour < this.actions[count_action].commands[count_day].commands.length; count_hour++) {
+          this.actions[count_action].commands[count_day].commands[count_hour].hourTimeAction = new Date(this.actions[count_action].commands[count_day].commands[count_hour].hourTimeAction);
+        }
+      }
     }
   }
 
