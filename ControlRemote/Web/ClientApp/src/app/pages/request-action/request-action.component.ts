@@ -30,8 +30,8 @@ export class RequestActionComponent implements OnInit {
     /*if (this.startDate == undefined || this.endDate == undefined)
       return;*/
 
-    const start = "2021-09-17";
-    const final = "2022-10-17";
+    const start = "2022-09-01";
+    const final = "2022-10-19";
     if (this.selectedLogin == "Все") {
       await this.reportService.getAllForTime(start, final).subscribe(data => {
         this.actions = data;

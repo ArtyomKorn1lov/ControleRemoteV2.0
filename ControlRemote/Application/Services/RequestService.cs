@@ -144,7 +144,7 @@ namespace Application.Services
                 {
                     actionPointAtTimeCommands.Add(new ActionPointAtTimeCommand
                     {
-                        FlagImg = actionPointCommands[action_count].FlagImg,
+                        FlagImg = 0,
                         EnableAction = false
                     });
                 }
