@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { JwtModule } from "@auth0/angular-jwt";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +19,11 @@ import { RequestActionComponent } from './pages/request-action/request-action.co
 import { DialogSearchComponent } from './components/dialog-search/dialog-search.component';
 import { DialogRegUpdateComponent } from './components/dialog-reg-update/dialog-reg-update.component';
 import { DialogEmpUpdateComponent } from './components/dialog-emp-update/dialog-emp-update.component';
+import { AuthGuard } from './guards/auth.guards';
+
+export function tokenGetter() { 
+  return localStorage.getItem("jwt"); 
+}
 
 @NgModule({
   declarations: [
@@ -39,12 +45,19 @@ import { DialogEmpUpdateComponent } from './components/dialog-emp-update/dialog-
     BrowserAnimationsModule,
     MatDialogModule,
     FormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:5001"],
+        disallowedRoutes: []
+      }
+    }),
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
       { path: '', component: MainComponent },
-      { path: 'user-control', component: UserControlComponent },
-      { path: 'request-action', component: RequestActionComponent }
+      { path: 'user-control', component: UserControlComponent, canActivate: [AuthGuard] },
+      { path: 'request-action', component: RequestActionComponent, canActivate: [AuthGuard] }
     ]),
   ],
   providers: [],

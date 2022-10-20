@@ -30,31 +30,26 @@ export class DialogAuthComponent implements OnInit {
     }
     let loginModel = new LoginModel(this.login, this.password);
     await this.accountService.login(loginModel).subscribe(async data => {
-      if(data == "success") {
-        alert(data);
-        console.log(data);
-        this.dialogRef.close();
-        await this.choiseUrl();
-        return;
-      }
-      if(data == "authorize") {
-        alert("Пользователь уже авторизован в системе");
+      if (data.token == "error") {
+        alert("Некорректные логин и(или) пароль");
         console.log(data);
         this.login = '';
         this.password = '';
         return;
       }
-      alert("Некорректные логин и(или) пароль");
+      alert("success");
       console.log(data);
-      this.login = '';
-      this.password = '';
+      const token = data.token;
+      this.accountService.saveToken(token);
+      this.dialogRef.close();
+      //await this.choiseUrl();
       return;
     });
   }
 
   public async choiseUrl(): Promise<void> {
     await this.accountService.isUserAuthorized().subscribe(data => {
-      if(data.type == "admin") {
+      if (data.type == "admin") {
         this.router.navigateByUrl(this.conroleRoute);
         return;
       }

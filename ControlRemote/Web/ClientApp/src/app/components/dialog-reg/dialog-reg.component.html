@@ -4,25 +4,25 @@
         <h1 class="name-text">Создание руководителя</h1>
     </div>
     <form class="dialog__content">
-        <h2 class="caption-text">Имя</h2>
+        <h2 class="dialog-text">Имя</h2>
         <input #selectorName="ngModel" [(ngModel)]="name" name="name" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="selectorName.invalid && selectorName.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
         </div>
-        <h2 class="caption-text">Логин</h2>
+        <h2 class="dialog-text">Логин</h2>
         <input #selectorLogin="ngModel" [(ngModel)]="login" name="login" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="selectorLogin.invalid && selectorLogin.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
         </div>
-        <h2 class="caption-text">Пароль</h2>
+        <h2 class="dialog-text">Пароль</h2>
         <input #selectorPassword="ngModel" [(ngModel)]="password" name="password" class="primary-input" type="password" required>
         <div class="valid-container" *ngIf="selectorPassword.invalid && selectorPassword.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
         </div>
-        <h2 class="caption-text">Подтвердите пароль</h2>
+        <h2 class="dialog-text">Подтвердите пароль</h2>
         <input #selectorConfirm="ngModel" [(ngModel)]="confirmPassword" name="confirmPassword" class="primary-input" type="password" required>
         <div class="valid-container" *ngIf="selectorConfirm.invalid && selectorConfirm.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">

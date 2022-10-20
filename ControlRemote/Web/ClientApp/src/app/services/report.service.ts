@@ -13,4 +13,8 @@ export class ReportService {
   public getAllForTime(start: string, final: string): Observable<ActionSortByUserLoginModel[]> {
     return this.http.get<ActionSortByUserLoginModel[]>(`api/report/report-list/${start}/${final}`);
   }
+
+  public getByLoginForTime(login: string, start: string, final: string): Observable<ActionSortByUserLoginModel[]> {
+    return this.http.get<ActionSortByUserLoginModel[]>(`api/report/report-list/${login}/${start}/${final}`);
+  }
 }

@@ -4,13 +4,13 @@
         <h1 class="name-text">Аккаунт</h1>
     </div>
     <form class="dialog__content">
-        <h2 class="caption-text">Имя</h2>
+        <h2 class="dialog-text">Имя</h2>
         <input #selectorName="ngModel" [(ngModel)]="employer.name" name="name" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="selectorName.invalid && selectorName.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">
             <p class="valid-container__text">Обязательное поле для заполнения</p>
         </div>
-        <h2 class="caption-text">Домен/Логин</h2>
+        <h2 class="dialog-text">Домен/Логин</h2>
         <input #selectorLogin="ngModel" [(ngModel)]="employer.login" name="login" class="primary-input" type="text" required>
         <div class="valid-container" *ngIf="selectorLogin.invalid && selectorLogin.touched">
             <img class="valid-container__image" src="assets/valid_mark.png">

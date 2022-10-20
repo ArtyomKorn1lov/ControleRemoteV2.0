@@ -141,7 +141,7 @@ namespace ControlRemote.Controllers
         [HttpGet("by-user-login")]
         public async Task<List<string>> GetByUserLogin()
         {
-            string role = HttpContext.User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType);
+            string role = User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType);
             if (role == null)
             {
                 return null;
@@ -152,7 +152,7 @@ namespace ControlRemote.Controllers
                 logins = await _employerService.GetAllLogins();
                 return logins;
             }
-            logins = await _userService.GetLoginsByUserLogin(HttpContext.User.Identity.Name);
+            logins = await _userService.GetLoginsByUserLogin(User.Identity.Name);
             if(logins == null)
             {
                 return null;

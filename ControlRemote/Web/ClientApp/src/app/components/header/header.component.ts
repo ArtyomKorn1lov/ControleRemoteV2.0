@@ -10,7 +10,7 @@ import { DialogAuthComponent } from '../dialog-auth/dialog-auth.component';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  public href: string = "";
+  public tragetRoute: string = "/";
 
   constructor(private router: Router, private dialog: MatDialog, public accountService: AccountService) { }
 
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
       if(data == "success") {
         alert("Успешный выход");
         console.log(data);
-        this.router.navigateByUrl(this.href);
+        this.router.navigateByUrl(this.tragetRoute);
         return;
       }
       alert("Ошибка выхода");

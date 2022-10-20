@@ -33,7 +33,7 @@ namespace Web.Controllers
         [HttpGet("report-list/{start}/{final}")]
         public async Task<List<ActionSortByUserLoginModel>> GetAllForTime(DateTime start, DateTime final)
         {
-            string role = HttpContext.User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType);
+            string role = User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType);
             if(role == null)
             {
                 return null;
@@ -49,12 +49,19 @@ namespace Web.Controllers
                 }
                 return actionSortByUserLoginModels;
             }
-            List<string> logins = await _userService.GetLoginsByUserLogin(HttpContext.User.Identity.Name);
+            List<string> logins = await _userService.GetLoginsByUserLogin(User.Identity.Name);
             return await GetByLoginEmployerForTime(logins, start, final);
         }
 
         [Authorize(Roles = "admin, manager")]
-        [HttpGet("report-list/{logins}/{start}/{final}")]
+        [HttpGet("report-list/{login}/{start}/{final}")]
+        public async Task<List<ActionSortByUserLoginModel>> GetByLoginEmployerForTime(string login, DateTime start, DateTime final)
+        {
+            List<string> logins = new List<string>();
+            logins.Add(login);
+            return await GetByLoginEmployerForTime(logins, start, final);
+        }
+
         public async Task<List<ActionSortByUserLoginModel>> GetByLoginEmployerForTime(List<string> logins, DateTime start, DateTime final)
         {
             List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetByLoginEmployerForTime(logins, start, final);

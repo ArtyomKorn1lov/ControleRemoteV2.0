@@ -12,11 +12,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Dto;
 using Web.DtoConverter;
+using Web;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Web.TokenService;
 
 namespace Web.Controllers
 {
@@ -27,12 +32,14 @@ namespace Web.Controllers
         private IUnitOfWork _unitOfWork;
         private IConfiguration _configuration { get; }
         private IUserService _userService;
+        private ITokenService _tokenService;
 
-        public AccountController(IConfiguration configuration, IUnitOfWork unitOfWork, IUserService userService)
+        public AccountController(IConfiguration configuration, IUnitOfWork unitOfWork, IUserService userService, ITokenService tokenService)
         {
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
@@ -40,24 +47,21 @@ namespace Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if(model is null)
+                    return Ok("error");
+                if (model.Login == _configuration.GetConnectionString("AdminLogin") && model.Password == _configuration.GetConnectionString("AdminPassword"))
                 {
-                    if (IsUserAuthorized().Name != null)
-                    {
-                        return Ok("authorize");
-                    }
-                    if (model.Login == _configuration.GetConnectionString("AdminLogin") && model.Password == _configuration.GetConnectionString("AdminPassword"))
-                    {
-                        await Authenticate(_configuration.GetConnectionString("AdminLogin"), "admin");
-                        return Ok("success");
-                    }
-                    bool result = await _userService.GetLoginResult(model.Login, model.Password);
-                    if (result)
-                    {
-                        await Authenticate(model.Login, "manager");
-                        return Ok("success");
-                    }
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    List<Claim> identity = GetIdentity(_configuration.GetConnectionString("AdminLogin"), "admin");
+                    string accessToken = _tokenService.GenerateAccessToken(identity);
+                    string refreshToken = _tokenService.GenerateRefreshToken();
+                    model.RefreshToken = refreshToken;
+                    return Ok(new AuthenticatedResponse { Token = tokenString });
+                }
+                if (await _userService.GetLoginResult(model.Login, model.Password))
+                {
+                    List<Claim> identity = GetIdentity(model.Login, "manager");
+                    string tokenString = CreateToken(identity);
+                    return Ok(new AuthenticatedResponse { Token = tokenString });
                 }
                 return Ok("error");
             }
@@ -67,51 +71,28 @@ namespace Web.Controllers
             }
         }
 
-        private async Task Authenticate(string userName, string role)
+        private string CreateToken(List<Claim> identity)
+        {
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
+            SigningCredentials signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            JwtSecurityToken tokeOptions = new JwtSecurityToken(
+                issuer: "https://localhost:5001",
+                audience: "https://localhost:5001",
+                claims: identity,
+                expires: DateTime.Now.AddMinutes(5),
+                signingCredentials: signinCredentials
+            );
+            return new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+        }
+
+        private List<Claim> GetIdentity(string userName, string role)
         {
             var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
-            };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
                 {
-                    if (IsUserAuthorized().Name != null)
-                    {
-                        return Ok("authorize");
-                    }
-                    if (model.Login == _configuration.GetConnectionString("AdminLogin"))
-                    {
-                        return Ok("error");
-                    }
-                    if (await _userService.GetRegisterResult(model.Login))
-                    {
-                        UserCreateCommand userCreateCommand = UserDtoConverter.RegisterModelConvertToUserCreateCommand(model);
-                        if (await _userService.CreateUser(userCreateCommand))
-                        {
-                            await _unitOfWork.Commit();
-                            await Authenticate(model.Login, "manager");
-                            return Ok("success");
-                        }
-                        return Ok("error");
-                    }
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-                }
-                return Ok("error");
-            }
-            catch
-            {
-                return BadRequest("error");
-            }
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
+                };
+            return claims;
         }
 
         [HttpPost("logout")]
@@ -135,7 +116,7 @@ namespace Web.Controllers
         [HttpGet("is-authorized")]
         public AuthoriseModel IsUserAuthorized()
         {
-            AuthoriseModel authorise = new AuthoriseModel(HttpContext.User.Identity.Name, HttpContext.User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType));
+            AuthoriseModel authorise = new AuthoriseModel(User.Identity.Name, User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType));
             return authorise;
         }
 

@@ -4,6 +4,7 @@ using Domain.IRepositories;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,7 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Text;
+using Web;
+using Web.TokenService;
 
 namespace ControlRemote
 {
@@ -36,14 +41,26 @@ namespace ControlRemote
             services.AddScoped<IUserRepository, UserRepository>(); // классы базы данных
             services.AddScoped<IEmployerRepository, EmployerRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddTransient<ITokenService, TokenService>();
 
             // аутентификация на уровне сервера
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // храним сессию 10 минут
-                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login"); // путь к авторизации по умолчанию
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "https://localhost:5001",
+                    ValidAudience = "https://localhost:5001",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+                };
+            });
 
             // добавление бд
             services.AddDbContext<ControlRemoteDbContext>(options =>
@@ -55,6 +72,17 @@ namespace ControlRemote
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist"; // расположен клиентский код
+            });
+
+            //включение запросов между разными источниками
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EnableCORS", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
             });
         }
 
@@ -89,6 +117,7 @@ namespace ControlRemote
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCors("EnableCORS");
 
             app.UseEndpoints(endpoints =>
             {

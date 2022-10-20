@@ -12,6 +12,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    background: #E8E7E7;
 }
 
 .dialog__title {

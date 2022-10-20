@@ -32,9 +32,9 @@
     font-size: 26px;
     line-height: 60px;
     border: 0;
-    box-shadow: 14px 9px 4px rgba(0, 0, 0, 0.08);
-    background: #d6d6d6;
+    background: transparent;
     color: #333C65;
+    border-bottom: 1px solid #7365A2;
     outline: none;
 }
 

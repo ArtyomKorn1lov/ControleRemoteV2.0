@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { firstValueFrom, Observable } from "rxjs";
 import { LoginModel } from '../models/LoginModel';
 import { RegisterModel } from '../models/RegisterModel';
@@ -7,6 +7,8 @@ import { AuthoriseModel } from '../models/AuthoriseModel';
 import { UserModel } from '../models/UserModel';
 import { UserCreateModel } from '../models/UserCreateModel';
 import { UserUpdateModel } from '../models/UserUpdateModel';
+import { AuthenticatedResponse } from '../models/AuthenticatedResponse';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,7 @@ export class AccountService {
   public authorize: AuthoriseModel = new AuthoriseModel ("", "");
   public currentUrl: string = "/";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
   public pushFlag(flag: number): void {
     sessionStorage.setItem('UserFlag', flag.toString());
@@ -61,6 +63,18 @@ export class AccountService {
     sessionStorage.removeItem('UserRoute');
   }
 
+  public saveToken(token: string): void {
+    localStorage.setItem("jwt", token); 
+  }
+
+  public isAuthorized(): void {
+    const token = localStorage.getItem("jwt");
+    if (token && !this.jwtHelper.isTokenExpired(token))
+      this.userFlag = true;
+    else
+      this.userFlag = false;
+  }
+
   public async getAuthorizeModel(href: string): Promise<void> {
     this.currentUrl = href;
     await this.isUserAuthorized().subscribe(data => {
@@ -78,8 +92,8 @@ export class AccountService {
     return this.http.post(`api/account/register`, user, { responseType: 'text' });
   }
 
-  public login(user: LoginModel): Observable<string> {
-    return this.http.post(`api/account/login`, user, { responseType: 'text' });
+  public login(user: LoginModel): Observable<AuthenticatedResponse> {
+    return this.http.post<AuthenticatedResponse>(`api/account/login`, user, { headers: new HttpHeaders({ "Content-Type": "application/json"}) });
   }
 
   public isUserAuthorized(): Observable<AuthoriseModel> {
@@ -87,6 +101,7 @@ export class AccountService {
   }
 
   public logOut(): Observable<string> {
+    localStorage.removeItem("jwt");
     var user = new UserModel(0, "", "");
     return this.http.post(`api/account/logout`, user, { responseType: 'text' });
   }

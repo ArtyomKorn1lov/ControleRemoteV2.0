@@ -1,10 +1,10 @@
 .ng-valid[required],
 .ng-valid.required {
-    border: 2px solid var(--color-primary-text);
+    border-bottom: 1px solid #7365A2;
 }
 
 .ng-invalid:not(form).ng-touched {
-    border: 2px solid var(--color-invalid-text);
+    border-bottom: 1px solid red;
 }
 
 .valid-container {
