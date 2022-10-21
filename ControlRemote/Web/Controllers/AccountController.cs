@@ -51,17 +51,31 @@ namespace Web.Controllers
                     return Ok("error");
                 if (model.Login == _configuration.GetConnectionString("AdminLogin") && model.Password == _configuration.GetConnectionString("AdminPassword"))
                 {
+                    int accountId = await _userService.GetUserIdByLogin(_configuration.GetConnectionString("AdminLogin"));
                     List<Claim> identity = GetIdentity(_configuration.GetConnectionString("AdminLogin"), "admin");
                     string accessToken = _tokenService.GenerateAccessToken(identity);
                     string refreshToken = _tokenService.GenerateRefreshToken();
-                    model.RefreshToken = refreshToken;
-                    return Ok(new AuthenticatedResponse { Token = tokenString });
+                    await _userService.SetUserToken(accountId, refreshToken);
+                    await _unitOfWork.Commit();
+                    return Ok(new AuthenticatedResponse 
+                    {
+                        Token = accessToken,
+                        RefreshToken = refreshToken
+                    });
                 }
                 if (await _userService.GetLoginResult(model.Login, model.Password))
                 {
+                    int accountId = await _userService.GetUserIdByLogin(model.Login);
                     List<Claim> identity = GetIdentity(model.Login, "manager");
-                    string tokenString = CreateToken(identity);
-                    return Ok(new AuthenticatedResponse { Token = tokenString });
+                    string accessToken = _tokenService.GenerateAccessToken(identity);
+                    string refreshToken = _tokenService.GenerateRefreshToken();
+                    await _userService.SetUserToken(accountId, refreshToken);
+                    await _unitOfWork.Commit();
+                    return Ok(new AuthenticatedResponse
+                    {
+                        Token = accessToken,
+                        RefreshToken = refreshToken
+                    }); 
                 }
                 return Ok("error");
             }

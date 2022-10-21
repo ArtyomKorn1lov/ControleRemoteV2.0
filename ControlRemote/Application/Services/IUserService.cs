@@ -11,6 +11,10 @@ namespace Application.Services
     {
         Task<bool> GetLoginResult(string login, string password);
         Task<bool> GetRegisterResult(string login);
+        Task<bool> SetUserToken(int id, string refreshToken);
+        Task<bool> RefreshUserToken(int id, string refreshToken);
+        Task<int> GetUserIdByLogin(string login);
+        Task<UserTokenCommand> GetUserTokenbByLogin(string login);
         Task<bool> CreateUser(UserCreateCommand user);
         Task<List<UserTransferCommand>> GetUsers();
         Task<bool> UpdateUser(UserUpdateCommand user);

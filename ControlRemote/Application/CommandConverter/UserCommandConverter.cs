@@ -63,5 +63,20 @@ namespace Application.CommandConverter
             }
             return user.Employers.Select(d => d.Login).ToList();
         }
+
+        public static UserTokenCommand UserEntityConvertToUserToken(User user)
+        {
+            if (user == null)
+            {
+                return null;
+            }
+            return new UserTokenCommand
+            {
+                Id = user.Id,
+                Login = user.Login,
+                RefreshToken = user.RefreshToken,
+                RefreshTokenExpiryTime = user.RefreshTokenExpiryTime
+            };
+        }
     }
 }

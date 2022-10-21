@@ -13,6 +13,8 @@ namespace Domain.Entity
         public string Name { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
         public List<Employer> Employers { get; set; }
 
         public void CopyFrom(User user)

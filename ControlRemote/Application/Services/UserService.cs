@@ -174,5 +174,65 @@ namespace Application.Services
                 return false;
             }
         }
+
+        public async Task<bool> SetUserToken(int id, string refreshToken)
+        {
+            try
+            {
+                User user = await _userRepository.GetUserById(id);
+                if (user == null)
+                    return false;
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<int> GetUserIdByLogin(string login)
+        {
+            try
+            {
+                User user = await _userRepository.GetUserByLogin(login);
+                return user.Id;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public async Task<UserTokenCommand> GetUserTokenbByLogin(string login)
+        {
+            try
+            {
+                User user = await _userRepository.GetUserByLogin(login);
+                UserTokenCommand command = UserCommandConverter.UserEntityConvertToUserToken(user);
+                return command;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> RefreshUserToken(int id, string refreshToken)
+        {
+            try
+            {
+                User user = await _userRepository.GetUserById(id);
+                if (user == null)
+                    return false;
+                user.RefreshToken = refreshToken;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

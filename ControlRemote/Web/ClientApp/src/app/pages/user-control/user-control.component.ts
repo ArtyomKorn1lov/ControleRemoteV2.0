@@ -178,7 +178,7 @@ export class UserControlComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
-    await this.accountService.getAuthorizeModel(this.router.url);
+    //await this.accountService.getAuthorizeModel(this.router.url);
     await this.accountService.getUsers().subscribe(data => {
       this.users = data;
     });

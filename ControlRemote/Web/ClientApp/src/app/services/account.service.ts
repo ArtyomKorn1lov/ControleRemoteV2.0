@@ -63,8 +63,9 @@ export class AccountService {
     sessionStorage.removeItem('UserRoute');
   }
 
-  public saveToken(token: string): void {
+  public saveTokens(token: string, refreshToken: string): void {
     localStorage.setItem("jwt", token); 
+    localStorage.setItem("refreshToken", refreshToken);
   }
 
   public isAuthorized(): void {
@@ -100,10 +101,9 @@ export class AccountService {
     return this.http.get<AuthoriseModel>(`api/account/is-authorized`);
   }
 
-  public logOut(): Observable<string> {
+  public logOut(): void {
     localStorage.removeItem("jwt");
-    var user = new UserModel(0, "", "");
-    return this.http.post(`api/account/logout`, user, { responseType: 'text' });
+    localStorage.removeItem("refreshToken");
   }
 
   public getUsers(): Observable<UserModel[]> {

@@ -19,17 +19,8 @@ export class HeaderComponent implements OnInit {
   }
 
   public logOut(): void {
-    this.accountService.logOut().subscribe(data => {
-      if(data == "success") {
-        alert("Успешный выход");
-        console.log(data);
-        this.router.navigateByUrl(this.tragetRoute);
-        return;
-      }
-      alert("Ошибка выхода");
-      console.log(data);
-      return;
-    });
+    this.accountService.logOut();
+    this.router.navigateByUrl(this.tragetRoute);
   }
 
   ngOnInit(): void {

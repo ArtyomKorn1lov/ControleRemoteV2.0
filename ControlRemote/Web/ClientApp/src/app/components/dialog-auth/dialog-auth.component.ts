@@ -40,7 +40,8 @@ export class DialogAuthComponent implements OnInit {
       alert("success");
       console.log(data);
       const token = data.token;
-      this.accountService.saveToken(token);
+      const refreshToken = data.refreshToken;
+      this.accountService.saveTokens(token, refreshToken);
       this.dialogRef.close();
       //await this.choiseUrl();
       return;

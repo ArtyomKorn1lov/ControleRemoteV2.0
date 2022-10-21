@@ -22,9 +22,13 @@ export class MainComponent implements OnInit {
       this.router.navigateByUrl(this.requestUrl);
   }
 
+  public logOut(): void {
+    this.accountService.logOut();
+  }
+
   public async ngOnInit(): Promise<void> {
-    await this.accountService.getAuthorizeModel(this.router.url);
-    await this.checkAccount();
+    //await this.accountService.getAuthorizeModel(this.router.url);
+    //await this.checkAccount();
   }
 
 }
