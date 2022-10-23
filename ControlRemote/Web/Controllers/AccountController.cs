@@ -29,8 +29,8 @@ namespace Web.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        private IUnitOfWork _unitOfWork;
         private IConfiguration _configuration { get; }
+        private IUnitOfWork _unitOfWork;
         private IUserService _userService;
         private ITokenService _tokenService;
 
@@ -85,20 +85,6 @@ namespace Web.Controllers
             }
         }
 
-        private string CreateToken(List<Claim> identity)
-        {
-            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-            SigningCredentials signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            JwtSecurityToken tokeOptions = new JwtSecurityToken(
-                issuer: "https://localhost:5001",
-                audience: "https://localhost:5001",
-                claims: identity,
-                expires: DateTime.Now.AddMinutes(5),
-                signingCredentials: signinCredentials
-            );
-            return new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-        }
-
         private List<Claim> GetIdentity(string userName, string role)
         {
             var claims = new List<Claim>
@@ -109,24 +95,7 @@ namespace Web.Controllers
             return claims;
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            try
-            {
-                if (IsUserAuthorized().Name == null)
-                {
-                    return Ok("error");
-                }
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                return Ok("success");
-            }
-            catch
-            {
-                return BadRequest("error");
-            }
-        }
-
+        [Authorize]
         [HttpGet("is-authorized")]
         public AuthoriseModel IsUserAuthorized()
         {

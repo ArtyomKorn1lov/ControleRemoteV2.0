@@ -75,7 +75,7 @@ namespace ControlRemote
             });
 
             //включение запросов между разными источниками
-            services.AddCors(options =>
+            /*services.AddCors(options =>
             {
                 options.AddPolicy("EnableCORS", builder =>
                 {
@@ -83,7 +83,7 @@ namespace ControlRemote
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
-            });
+            });*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

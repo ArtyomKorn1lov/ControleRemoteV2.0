@@ -43,20 +43,21 @@ export class DialogAuthComponent implements OnInit {
       const refreshToken = data.refreshToken;
       this.accountService.saveTokens(token, refreshToken);
       this.dialogRef.close();
-      //await this.choiseUrl();
+      await this.choiseUrl();
       return;
     });
   }
 
   public async choiseUrl(): Promise<void> {
-    await this.accountService.isUserAuthorized().subscribe(data => {
-      if (data.type == "admin") {
+    await this.accountService.getAuthorizeModel().subscribe(data => {
+      this.accountService.authorize = data;
+      this.accountService.userFlag = true;
+      if(data.type == "admin")
         this.router.navigateByUrl(this.conroleRoute);
-        return;
-      }
-      this.router.navigateByUrl(this.requestRoute);
-      return;
+      else
+        this.router.navigateByUrl(this.requestRoute);
     });
+
   }
 
   ngOnInit(): void {

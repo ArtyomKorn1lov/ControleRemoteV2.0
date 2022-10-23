@@ -19,7 +19,10 @@ export class HeaderComponent implements OnInit {
   }
 
   public logOut(): void {
-    this.accountService.logOut();
+    if (this.accountService.logOut())
+      alert("Успешный выход");
+    else
+      alert("Ошибка выхода");
     this.router.navigateByUrl(this.tragetRoute);
   }
 

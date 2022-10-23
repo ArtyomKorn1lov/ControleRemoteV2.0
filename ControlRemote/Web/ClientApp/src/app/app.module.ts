@@ -63,4 +63,5 @@ export function tokenGetter() {
   providers: [],
   bootstrap: [AppComponent]
 })
+//canActivate: [AuthGuard]
 export class AppModule { }

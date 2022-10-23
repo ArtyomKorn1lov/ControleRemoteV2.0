@@ -16,7 +16,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AccountService {
 
   public userFlag: boolean = false;
-  public authorize: AuthoriseModel = new AuthoriseModel ("", "");
+  public authorize: AuthoriseModel = new AuthoriseModel("", "");
   public currentUrl: string = "/";
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
@@ -27,7 +27,7 @@ export class AccountService {
 
   public getUserFlag(): number {
     let flag = sessionStorage.getItem('UserFlag');
-    if(flag == null) {
+    if (flag == null) {
       return 0;
     }
     return parseInt(flag);
@@ -51,7 +51,7 @@ export class AccountService {
 
   public getUrl(): string {
     let targetRoute = sessionStorage.getItem('UserRoute');
-    if(targetRoute == null) {
+    if (targetRoute == null) {
       return "";
     }
     return targetRoute;
@@ -64,7 +64,7 @@ export class AccountService {
   }
 
   public saveTokens(token: string, refreshToken: string): void {
-    localStorage.setItem("jwt", token); 
+    localStorage.setItem("jwt", token);
     localStorage.setItem("refreshToken", refreshToken);
   }
 
@@ -76,34 +76,28 @@ export class AccountService {
       this.userFlag = false;
   }
 
-  public async getAuthorizeModel(href: string): Promise<void> {
-    this.currentUrl = href;
-    await this.isUserAuthorized().subscribe(data => {
-      this.authorize = data;
-      if(data.name != null || data.type != null)
-      {
-        this.userFlag = true;
-        return;
-      }
-      this.userFlag = false;
-    })
-  }
-
   public registration(user: RegisterModel): Observable<string> {
     return this.http.post(`api/account/register`, user, { responseType: 'text' });
   }
 
   public login(user: LoginModel): Observable<AuthenticatedResponse> {
-    return this.http.post<AuthenticatedResponse>(`api/account/login`, user, { headers: new HttpHeaders({ "Content-Type": "application/json"}) });
+    return this.http.post<AuthenticatedResponse>(`api/account/login`, user, { headers: new HttpHeaders({ "Content-Type": "application/json" }) });
   }
 
-  public isUserAuthorized(): Observable<AuthoriseModel> {
+  public logOut(): boolean {
+    if(localStorage.getItem("jwt") == null || localStorage.getItem("refreshToken") == null) {
+      return false;
+    }
+    else {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("refreshToken");
+      this.userFlag = false;
+      return true;
+    }
+  }
+
+  public getAuthorizeModel(): Observable<AuthoriseModel> {
     return this.http.get<AuthoriseModel>(`api/account/is-authorized`);
-  }
-
-  public logOut(): void {
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("refreshToken");
   }
 
   public getUsers(): Observable<UserModel[]> {

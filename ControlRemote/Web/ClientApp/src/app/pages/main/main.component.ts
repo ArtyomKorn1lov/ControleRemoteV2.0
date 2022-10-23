@@ -14,21 +14,19 @@ export class MainComponent implements OnInit {
 
   constructor(private accountService: AccountService, private router: Router) { }
 
-  public async checkAccount(): Promise<void> {
-    console.log(this.accountService.authorize.type);
-    if(this.accountService.authorize.type == "admin")
-      this.router.navigateByUrl(this.controlUrl);
-    if(this.accountService.authorize.type == "manager")
-      this.router.navigateByUrl(this.requestUrl);
-  }
-
   public logOut(): void {
-    this.accountService.logOut();
+    if (this.accountService.logOut())
+      alert("Успешный выход");
+    else
+      alert("Ошибка выхода");
   }
 
   public async ngOnInit(): Promise<void> {
-    //await this.accountService.getAuthorizeModel(this.router.url);
-    //await this.checkAccount();
+    this.accountService.isAuthorized();
+    if (this.accountService.userFlag)
+      await this.accountService.getAuthorizeModel().subscribe(data => {
+        this.accountService.authorize = data;
+      });
   }
 
 }

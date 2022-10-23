@@ -3,6 +3,7 @@ import { AuthenticatedResponse } from '../models/AuthenticatedResponse';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AccountService } from '../services/account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +11,38 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router, private jwtHelper: JwtHelperService, private http: HttpClient) { }
+  constructor(private router: Router, private jwtHelper: JwtHelperService, private http: HttpClient, private accountService: AccountService) { }
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const token = localStorage.getItem("jwt");
     if (token && !this.jwtHelper.isTokenExpired(token)) {
-      console.log(this.jwtHelper.decodeToken(token));
+      const decodeToken = this.jwtHelper.decodeToken(token);
+      console.log(decodeToken);
+      await this.accountService.getAuthorizeModel().subscribe(data => {
+        this.accountService.authorize = data;
+        this.accountService.userFlag = true;
+        if(this.router.url == "/user-control" && data.type != "admin") {
+          this.router.navigate(["request-action"]);
+        }
+      });
       return true;
     }
-    if (token == null)
+    if (token == null) {
+      this.router.navigate([""]);
       return false;
+    }
     const isRefreshSuccess = await this.tryRefreshingTokens(token);
     if (!isRefreshSuccess) {
       this.router.navigate([""]);
+      return isRefreshSuccess;
     }
+    await this.accountService.getAuthorizeModel().subscribe(data => {
+      this.accountService.authorize = data;
+      this.accountService.userFlag = true;
+      if(this.router.url == "/user-control" && data.type != "admin") {
+        this.router.navigate(["request-action"]);
+      }
+    });
     return isRefreshSuccess;
   }
 

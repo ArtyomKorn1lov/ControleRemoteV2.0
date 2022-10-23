@@ -61,7 +61,7 @@ export class RequestActionComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
-    //await this.accountService.getAuthorizeModel(this.router.url);
+    this.accountService.isAuthorized();
     await this.employerService.getByUserLogin().subscribe(async data => {
       this.logins = this.logins.concat(data);
     });
