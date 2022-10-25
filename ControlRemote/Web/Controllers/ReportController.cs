@@ -40,6 +40,7 @@ namespace Web.Controllers
             }
             if(role == "admin")
             {
+                final = final.AddDays(1);
                 List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetAllForTime(start, final);
                 List<ActionSortByUserLoginModel> actionSortByUserLoginModels = actionSortByUserLoginCommands
                     .Select(d => ActionPointDtoConverter.ConvertCommandToModel(d)).ToList();
@@ -64,6 +65,7 @@ namespace Web.Controllers
 
         public async Task<List<ActionSortByUserLoginModel>> GetByLoginEmployerForTime(List<string> logins, DateTime start, DateTime final)
         {
+            final = final.AddDays(1);
             List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetByLoginEmployerForTime(logins, start, final);
             List<ActionSortByUserLoginModel> actionSortByUserLoginModels = actionSortByUserLoginCommands
                 .Select(d => ActionPointDtoConverter.ConvertCommandToModel(d)).ToList();

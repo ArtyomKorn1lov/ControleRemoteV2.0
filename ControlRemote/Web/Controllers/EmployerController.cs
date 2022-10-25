@@ -78,7 +78,7 @@ namespace ControlRemote.Controllers
                     await _unitOfWork.Commit();
                     return Ok("success");
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {
@@ -97,7 +97,7 @@ namespace ControlRemote.Controllers
                     await _unitOfWork.Commit();
                     return Ok("success");
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {
@@ -116,7 +116,7 @@ namespace ControlRemote.Controllers
                     await _unitOfWork.Commit();
                     return Ok("success");
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {

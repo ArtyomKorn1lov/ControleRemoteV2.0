@@ -25,3 +25,9 @@
 .action__point.-image {
     background: #49C9A7;
 }
+
+.name-text {
+    padding: 150px 0 0 0;
+    text-align: center;
+    color: #7365A2;
+}

@@ -45,21 +45,23 @@ export class DialogRegComponent implements OnInit {
       return;
     }
     let model = new UserCreateModel(this.name, this.login, this.password);
-    await this.accountService.createUser(model).subscribe(data => {
-      if(data == "success") {
+    await this.accountService.createUser(model).subscribe({
+      next: (data) => {
         alert(data);
         console.log(data);
-        this.dialogRef.close({result: "1"});
+        this.dialogRef.close({ result: "1" });
+        return;
+      },
+      error: (bad) => {
+        alert("Ошибка создания пользователя");
+        console.log(bad);
+        this.name = '';
+        this.login = '';
+        this.password = '';
+        this.confirmPassword = '';
         return;
       }
-      alert("Ошибка создания пользователя");
-      console.log(data);
-      this.name = '';
-      this.login = '';
-      this.password = '';
-      this.confirmPassword = '';
-      return;
-    })
+    });
   }
 
   ngOnInit(): void {

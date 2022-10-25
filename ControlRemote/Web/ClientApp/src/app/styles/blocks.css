@@ -72,12 +72,16 @@
     margin-left: 18px;
 }
 
+.control__text-selector:hover {
+    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #ececec, #ececec);
+}
+
 .control__text-selector.-header {
     border-bottom: 1px solid #7365A2;
 }
 
-.control__text-selector:hover {
-    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #ececec, #ececec);
+.control__text-selector.-header:hover {
+    background-image: none;
 }
 
 .control__text-selector.-active {

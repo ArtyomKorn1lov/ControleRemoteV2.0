@@ -48,7 +48,7 @@ namespace Web.Controllers
             try
             {
                 if(model is null)
-                    return Ok("error");
+                    return BadRequest("error");
                 if (model.Login == _configuration.GetConnectionString("AdminLogin") && model.Password == _configuration.GetConnectionString("AdminPassword"))
                 {
                     int accountId = await _userService.GetUserIdByLogin(_configuration.GetConnectionString("AdminLogin"));
@@ -77,7 +77,7 @@ namespace Web.Controllers
                         RefreshToken = refreshToken
                     }); 
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {
@@ -124,7 +124,7 @@ namespace Web.Controllers
             {
                 if (user.Login == _configuration.GetConnectionString("AdminLogin"))
                 {
-                    return Ok("error");
+                    return BadRequest("error");
                 }
                 if (await _userService.GetRegisterResult(user.Login))
                 {
@@ -134,9 +134,9 @@ namespace Web.Controllers
                         await _unitOfWork.Commit();
                         return Ok("success");
                     }
-                    return Ok("error");
+                    return BadRequest("error");
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {
@@ -152,16 +152,16 @@ namespace Web.Controllers
             {
                 if (user.Login == _configuration.GetConnectionString("AdminLogin"))
                 {
-                    return Ok("error");
+                    return BadRequest("error");
                 }
                 UserModel getUser = UserDtoConverter.UserTransferCommandConvertToUserDto(await _userService.GetUserById(user.Id));
                 if (getUser == null)
                 {
-                    return Ok("error");
+                    return BadRequest("error");
                 }
                 if (!await _userService.GetRegisterResult(user.Login) && getUser.Login != user.Login)
                 {
-                    return Ok("error");
+                    return BadRequest("error");
                 }
                 UserUpdateCommand userCommand = UserDtoConverter.UserUpdateModelConvertToUserUpdateCommand(user);
                 if (await _userService.UpdateUser(userCommand))
@@ -169,7 +169,7 @@ namespace Web.Controllers
                     await _unitOfWork.Commit();
                     return Ok("success");
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {
@@ -188,7 +188,7 @@ namespace Web.Controllers
                     await _unitOfWork.Commit();
                     return Ok("success");
                 }
-                return Ok("error");
+                return BadRequest("error");
             }
             catch
             {

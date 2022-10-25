@@ -29,18 +29,20 @@ export class DialogEmpUpdateComponent implements OnInit {
       alert("Не выбран руководитель");
       return;
     }
-    await this.employerService.updateEmployer(this.employer).subscribe(data => {
-      if(data == "success") {
+    await this.employerService.updateEmployer(this.employer).subscribe({
+      next: (data) => {
         alert(data);
         console.log(data);
-        this.dialogRef.close({result: "1"});
+        this.dialogRef.close({ result: "1" });
         return;
-      }
-      alert("Ошибка обновления сотрудника");
-      console.log(data);
-      this.employer.name = '';
-      this.employer.login = '';
-      return;
+      },
+      error: (bad) => {
+        alert("Ошибка обновления сотрудника");
+        console.log(bad);
+        this.employer.name = '';
+        this.employer.login = '';
+        return;
+      },
     });
   }
 

@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class DialogAuthComponent implements OnInit {
   public login: string = "";
   public password: string = "";
-  private conroleRoute: string = "/user-control";
+  private controleRoute: string = "/user-control";
   private requestRoute: string = "/request-action";
 
   constructor(public dialogRef: MatDialogRef<DialogAuthComponent>, private accountService: AccountService, private router: Router) { }
@@ -29,22 +29,24 @@ export class DialogAuthComponent implements OnInit {
       return;
     }
     let loginModel = new LoginModel(this.login, this.password);
-    await this.accountService.login(loginModel).subscribe(async data => {
-      if (data.token == "error") {
+    await this.accountService.login(loginModel).subscribe({
+      next: async (data) => {
+        alert("success");
+        console.log("success");
+        const token = data.token;
+        const refreshToken = data.refreshToken;
+        this.accountService.saveTokens(token, refreshToken);
+        this.dialogRef.close();
+        await this.choiseUrl();
+        return;
+      },
+      error: (bad) => {
         alert("Некорректные логин и(или) пароль");
-        console.log(data);
+        console.log(bad);
         this.login = '';
         this.password = '';
         return;
       }
-      alert("success");
-      console.log(data);
-      const token = data.token;
-      const refreshToken = data.refreshToken;
-      this.accountService.saveTokens(token, refreshToken);
-      this.dialogRef.close();
-      await this.choiseUrl();
-      return;
     });
   }
 
@@ -52,8 +54,8 @@ export class DialogAuthComponent implements OnInit {
     await this.accountService.getAuthorizeModel().subscribe(data => {
       this.accountService.authorize = data;
       this.accountService.userFlag = true;
-      if(data.type == "admin")
-        this.router.navigateByUrl(this.conroleRoute);
+      if (data.type == "admin")
+        this.router.navigateByUrl(this.controleRoute);
       else
         this.router.navigateByUrl(this.requestRoute);
     });

@@ -93,16 +93,18 @@ export class UserControlComponent implements OnInit {
     let ok = confirm("Удалить текущую запись?");
     if (ok) {
       const id = this.users[this.userIndex].id;
-      await this.accountService.deleteUser(id).subscribe(async data => {
-        if (data == "success") {
+      await this.accountService.deleteUser(id).subscribe({
+        next: async (data) => {
           alert(data);
           console.log(data);
           await this.ngOnInit();
           return;
+        },
+        error: (bad) => {
+          alert("Ошибка удаления");
+          console.log(bad);
+          return;
         }
-        alert("Ошибка удаления");
-        console.log(data);
-        return;
       });
     }
   }
@@ -142,18 +144,20 @@ export class UserControlComponent implements OnInit {
     if (ok) {
       const id = this.employers[this.employerIndex].id;
       const managerId = this.users[this.userIndex].id;
-      await this.employerService.removeEmployer(id).subscribe(async data => {
-        if (data == "success") {
+      await this.employerService.removeEmployer(id).subscribe({
+        next: async (data) => {
           alert(data);
           console.log(data);
           await this.employerService.getEmployersByManagerId(managerId).subscribe(data => {
             this.employers = data;
           });
           return;
-        }
-        alert("Ошибка удаления");
-        console.log(data);
-        return;
+        },
+        error: (bad) => {
+          alert("Ошибка удаления");
+          console.log(bad);
+          return;
+        },
       });
     }
   }

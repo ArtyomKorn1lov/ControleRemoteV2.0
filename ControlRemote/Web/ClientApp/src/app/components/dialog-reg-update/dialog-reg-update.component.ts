@@ -45,19 +45,21 @@ export class DialogRegUpdateComponent implements OnInit {
       return;
     }
     this.user.password = this.password;
-    await this.accountService.updateUser(this.user).subscribe(data => {
-      if(data == "success") {
+    await this.accountService.updateUser(this.user).subscribe({
+      next: (data) => {
         alert(data);
         console.log(data);
-        this.dialogRef.close({result: "1"});
+        this.dialogRef.close({ result: "1" });
         return;
-      }
-      alert("Ошибка обновления пользователя");
-      console.log(data);
-      this.password = '';
-      this.confirmPassword = '';
-      return;
-    })
+      },
+      error: (bad) => {
+        alert("Ошибка обновления пользователя");
+        console.log(bad);
+        this.password = '';
+        this.confirmPassword = '';
+        return;
+      },
+    });
   }
 
   public async ngOnInit(): Promise<void> {

@@ -32,19 +32,21 @@ export class DialogEmpComponent implements OnInit {
       return;
     }
     const employer = new EmployerCreateModel(this.managerId, this.name, this.login);
-    await this.employerService.createEmployer(employer).subscribe(data => {
-      if(data == "success") {
+    await this.employerService.createEmployer(employer).subscribe({
+      next: (data) => {
         alert(data);
         console.log(data);
-        this.dialogRef.close({result: "1"});
+        this.dialogRef.close({ result: "1" });
         return;
-      }
-      alert("Ошибка создания сотрудника");
-      console.log(data);
-      this.name = '';
-      this.login = '';
-      return;
-    })
+      },
+      error: (bad) => {
+        alert("Ошибка создания сотрудника");
+        console.log(bad);
+        this.name = '';
+        this.login = '';
+        return;
+      },
+    });
   }
 
   public ngOnInit(): void {
