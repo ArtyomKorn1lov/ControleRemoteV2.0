@@ -22,6 +22,7 @@ export class MainComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
+    this.accountService.currentUrl = this.router.url;
     this.accountService.isAuthorized();
     if (this.accountService.userFlag)
       await this.accountService.getAuthorizeModel().subscribe(data => {

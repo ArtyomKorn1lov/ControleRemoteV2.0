@@ -73,6 +73,7 @@ export class RequestActionComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
+    this.accountService.currentUrl = this.router.url;
     this.accountService.isAuthorized();
     let currentDate = new Date();
     this.endDate = currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
@@ -82,6 +83,7 @@ export class RequestActionComponent implements OnInit {
       this.logins = this.logins.concat(data);
     });
     this.fillMinuteArray();
+    this.waitFlag = true;
     await this.reportService.getAllForTime(this.startDate, this.endDate).subscribe(data => {
       this.actions = data;
       this.convertToNormalDate();

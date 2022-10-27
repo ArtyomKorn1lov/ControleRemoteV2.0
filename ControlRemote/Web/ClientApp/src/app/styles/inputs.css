@@ -26,6 +26,19 @@
     background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #4c3a8a, #4c3a8a);
 }
 
+.login-button {
+    min-width: 150px;
+    max-width: 100%;
+    background: #FFF5F2;
+    border: 0;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.login-button:hover { 
+    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #a5a5a5, #a5a5a5);
+}
+
 .primary-input {
     padding: 0px 15px;
     font-weight: 400;

@@ -20,6 +20,8 @@ import { DialogSearchComponent } from './components/dialog-search/dialog-search.
 import { DialogRegUpdateComponent } from './components/dialog-reg-update/dialog-reg-update.component';
 import { DialogEmpUpdateComponent } from './components/dialog-emp-update/dialog-emp-update.component';
 import { AuthGuard } from './guards/auth.guards';
+import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
+import { NoticeDialogComponent } from './components/notice-dialog/notice-dialog.component';
 
 export function tokenGetter() { 
   return localStorage.getItem("jwt"); 
@@ -37,7 +39,9 @@ export function tokenGetter() {
     RequestActionComponent,
     DialogSearchComponent,
     DialogRegUpdateComponent,
-    DialogEmpUpdateComponent
+    DialogEmpUpdateComponent,
+    DeleteDialogComponent,
+    NoticeDialogComponent
   ],
   imports: [
     BrowserModule,

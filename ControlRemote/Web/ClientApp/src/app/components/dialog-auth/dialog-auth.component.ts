@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/services/account.service';
 import { LoginModel } from 'src/app/models/LoginModel';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { NoticeDialogComponent } from '../notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-dialog-auth',
@@ -15,23 +16,23 @@ export class DialogAuthComponent implements OnInit {
   private controleRoute: string = "/user-control";
   private requestRoute: string = "/request-action";
 
-  constructor(public dialogRef: MatDialogRef<DialogAuthComponent>, private accountService: AccountService, private router: Router) { }
+  constructor(public dialogRef: MatDialogRef<DialogAuthComponent>, private dialog: MatDialog, private accountService: AccountService, private router: Router) { }
 
   public async authorize(): Promise<void> {
     if (this.login == undefined || this.login.trim() == '') {
-      alert("Введите логин пользователя");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите логин пользователя" } });
       this.login = '';
       return;
     }
     if (this.password == undefined || this.password.trim() == '') {
-      alert("Введите пароль");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите пароль" } });
       this.password = '';
       return;
     }
     let loginModel = new LoginModel(this.login, this.password);
     await this.accountService.login(loginModel).subscribe({
       next: async (data) => {
-        alert("success");
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log("success");
         const token = data.token;
         const refreshToken = data.refreshToken;
@@ -41,7 +42,7 @@ export class DialogAuthComponent implements OnInit {
         return;
       },
       error: (bad) => {
-        alert("Некорректные логин и(или) пароль");
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Некорректные логин и(или) пароль" } });
         console.log(bad);
         this.login = '';
         this.password = '';

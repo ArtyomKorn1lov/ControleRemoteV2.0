@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AccountService } from 'src/app/services/account.service';
 import { DialogAuthComponent } from '../dialog-auth/dialog-auth.component';
+import { NoticeDialogComponent } from '../notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -19,10 +20,12 @@ export class HeaderComponent implements OnInit {
   }
 
   public logOut(): void {
-    if (this.accountService.logOut())
-      alert("Успешный выход");
-    else
-      alert("Ошибка выхода");
+    if (this.accountService.logOut()) {
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешный выход" } });
+    }
+    else {
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Ошибка выхода" } });
+    }
     this.router.navigateByUrl(this.tragetRoute);
   }
 

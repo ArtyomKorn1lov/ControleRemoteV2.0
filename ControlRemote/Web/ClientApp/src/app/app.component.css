@@ -10,6 +10,10 @@
     background: #F5F5F5;
 }
 
+.page.-background {
+    background-image: url("src/assets/fon.png");
+}
+
 .page__content {
     width: 100%;
     position: relative;

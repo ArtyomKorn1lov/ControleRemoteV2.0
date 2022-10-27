@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmployerModel } from 'src/app/models/EmployerModel';
 import { EmployerService } from 'src/app/services/employer.service';
+import { NoticeDialogComponent } from '../notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-dialog-emp-update',
@@ -12,32 +13,32 @@ export class DialogEmpUpdateComponent implements OnInit {
 
   public employer: EmployerModel = new EmployerModel(0, 0, "", "");
 
-  constructor(private employerService: EmployerService, private dialogRef: MatDialogRef<DialogEmpUpdateComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private employerService: EmployerService, private dialog: MatDialog, private dialogRef: MatDialogRef<DialogEmpUpdateComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   public async update(): Promise<void> {
     if (this.employer.name == undefined || this.employer.name.trim() == '') {
-      alert("Введите имя сотрудника");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите имя сотрудника" } });
       this.employer.name = '';
       return;
     }
     if (this.employer.login == undefined || this.employer.login.trim() == '') {
-      alert("Введите домен/логин сотрудника");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите домен/логин сотрудника" } });
       this.employer.login = '';
       return;
     }
     if (this.employer.managerId == undefined) {
-      alert("Не выбран руководитель");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Не выбран руководитель" } });
       return;
     }
     await this.employerService.updateEmployer(this.employer).subscribe({
       next: (data) => {
-        alert(data);
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log(data);
         this.dialogRef.close({ result: "1" });
         return;
       },
       error: (bad) => {
-        alert("Ошибка обновления сотрудника");
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Ошибка обновления сотрудника" } });
         console.log(bad);
         this.employer.name = '';
         this.employer.login = '';

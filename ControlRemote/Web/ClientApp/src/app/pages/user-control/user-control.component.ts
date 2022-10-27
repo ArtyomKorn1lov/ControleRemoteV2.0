@@ -11,6 +11,8 @@ import { DialogRegComponent } from 'src/app/components/dialog-reg/dialog-reg.com
 import { DialogRegUpdateComponent } from 'src/app/components/dialog-reg-update/dialog-reg-update.component';
 import { DialogEmpComponent } from 'src/app/components/dialog-emp/dialog-emp.component';
 import { DialogEmpUpdateComponent } from 'src/app/components/dialog-emp-update/dialog-emp-update.component';
+import { DeleteDialogComponent } from 'src/app/components/delete-dialog/delete-dialog.component';
+import { NoticeDialogComponent } from 'src/app/components/notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-user-control',
@@ -90,23 +92,28 @@ export class UserControlComponent implements OnInit {
   public async removeUser(): Promise<void> {
     if (this.userIndex == undefined)
       return;
-    let ok = confirm("Удалить текущую запись?");
-    if (ok) {
-      const id = this.users[this.userIndex].id;
-      await this.accountService.deleteUser(id).subscribe({
-        next: async (data) => {
-          alert(data);
-          console.log(data);
-          await this.ngOnInit();
-          return;
-        },
-        error: (bad) => {
-          alert("Ошибка удаления");
-          console.log(bad);
-          return;
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(DeleteDialogComponent);
+    dialogRef.afterClosed().subscribe(async result => {
+      if (this.userIndex == undefined)
+        return;
+      if (result.flag) {
+        const id = this.users[this.userIndex].id;
+        await this.accountService.deleteUser(id).subscribe({
+          next: async (data) => {
+            const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
+            console.log(data);
+            await this.ngOnInit();
+            return;
+          },
+          error: (bad) => {
+            const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Ошибка удаления" } });
+            console.log(bad);
+            return;
+          }
+        });
+      }
+      return;
+    });
   }
 
   public async updateUser(): Promise<void> {
@@ -140,26 +147,31 @@ export class UserControlComponent implements OnInit {
   public async removeEmployer(): Promise<void> {
     if (this.employerIndex == undefined || this.userIndex == undefined)
       return;
-    let ok = confirm("Удалить текущую запись?");
-    if (ok) {
-      const id = this.employers[this.employerIndex].id;
-      const managerId = this.users[this.userIndex].id;
-      await this.employerService.removeEmployer(id).subscribe({
-        next: async (data) => {
-          alert(data);
-          console.log(data);
-          await this.employerService.getEmployersByManagerId(managerId).subscribe(data => {
-            this.employers = data;
-          });
-          return;
-        },
-        error: (bad) => {
-          alert("Ошибка удаления");
-          console.log(bad);
-          return;
-        },
-      });
-    }
+    const dialogRef = this.dialog.open(DeleteDialogComponent);
+    dialogRef.afterClosed().subscribe(async result => {
+      if (this.employerIndex == undefined || this.userIndex == undefined)
+        return;
+      if (result.flag) {
+        const id = this.employers[this.employerIndex].id;
+        const managerId = this.users[this.userIndex].id;
+        await this.employerService.removeEmployer(id).subscribe({
+          next: async (data) => {
+            const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
+            console.log(data);
+            await this.employerService.getEmployersByManagerId(managerId).subscribe(data => {
+              this.employers = data;
+            });
+            return;
+          },
+          error: (bad) => {
+            const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Ошибка удаления" } });
+            console.log(bad);
+            return;
+          },
+        });
+      }
+      return;
+    });
   }
 
   public async updateEmployer(): Promise<void> {
@@ -182,6 +194,7 @@ export class UserControlComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
+    this.accountService.currentUrl = this.router.url;
     this.accountService.isAuthorized();
     await this.accountService.getUsers().subscribe(data => {
       this.users = data;

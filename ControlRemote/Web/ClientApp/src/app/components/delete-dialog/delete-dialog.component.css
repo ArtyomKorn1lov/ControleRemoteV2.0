@@ -1,0 +1,28 @@
+.name-text {
+    margin-left: 17px;
+    color: #333C65;
+}
+
+.dialog-text {
+    text-align: center;
+    font-size: 26px;
+    margin-top: 18px;
+    padding: 0 0 10px;
+    border-bottom: 1px solid #7365A2;
+}
+
+.button-selection {
+    margin-top: 49px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.primary-button {
+    min-width: 200px;
+}
+
+.secondary-button {
+    min-width: 200px;
+    margin-right: 84px;
+}

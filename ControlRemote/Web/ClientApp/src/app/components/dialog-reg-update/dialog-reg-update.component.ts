@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UserUpdateModel } from 'src/app/models/UserUpdateModel';
 import { AccountService } from 'src/app/services/account.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NoticeDialogComponent } from '../notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-dialog-reg-update',
@@ -15,31 +16,31 @@ export class DialogRegUpdateComponent implements OnInit {
   public password: string = "";
   public confirmPassword: string = "";
 
-  constructor(private accountService: AccountService, private dialogRef: MatDialogRef<DialogRegUpdateComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private accountService: AccountService, private dialog: MatDialog, private dialogRef: MatDialogRef<DialogRegUpdateComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   public async update(): Promise<void> {
     if (this.user.name == undefined || this.user.name.trim() == '') {
-      alert("Введите имя руководителя");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите имя руководителя" } });
       this.user.name = '';
       return;
     }
     if (this.user.login == undefined || this.user.login.trim() == '') {
-      alert("Введите логин руководителя");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите логин руководителя" } });
       this.user.login = '';
       return;
     }
     if (this.password == undefined || this.password.trim() == '') {
-      alert("Введите пароль");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите пароль" } });
       this.password = '';
       return;
     }
     if (this.confirmPassword == undefined || this.confirmPassword.trim() == '') {
-      alert("Повторите пароль");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Повторите пароль" } });
       this.confirmPassword = '';
       return;
     }
     if (this.confirmPassword != this.password) {
-      alert("Пароли не совпадают");
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Пароли не совпадают" } });
       this.password = '';
       this.confirmPassword = '';
       return;
@@ -47,13 +48,13 @@ export class DialogRegUpdateComponent implements OnInit {
     this.user.password = this.password;
     await this.accountService.updateUser(this.user).subscribe({
       next: (data) => {
-        alert(data);
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log(data);
         this.dialogRef.close({ result: "1" });
         return;
       },
       error: (bad) => {
-        alert("Ошибка обновления пользователя");
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Ошибка обновления пользователя" } });
         console.log(bad);
         this.password = '';
         this.confirmPassword = '';

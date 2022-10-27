@@ -1,4 +1,4 @@
-<div class="page">
+<div class="page" [ngClass]="{'-background': accountService.currentUrl == '/'}">
     <app-header></app-header>
     <div id="height-container" class="page__content">
         <router-outlet></router-outlet>

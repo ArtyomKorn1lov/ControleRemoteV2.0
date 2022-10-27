@@ -234,5 +234,20 @@ namespace Application.Services
                 return false;
             }
         }
+
+        public async Task<string> GetUserNameByLogin(string login)
+        {
+            try
+            {
+                User user = await _userRepository.GetUserByLogin(login);
+                if (user == null)
+                    return null;
+                return user.Name;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

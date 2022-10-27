@@ -93,6 +93,12 @@
     flex-direction: column;
 }
 
+.action__menu {
+    display: flex;
+    flex-direction: column;
+    background: #F5F5F5;
+}
+
 .action__controls {
     display: flex;
     justify-content: space-between;
@@ -129,7 +135,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 7px 0 0 40px; 
+    padding: 7px 0 0 40px;
 }
 
 .action__point {

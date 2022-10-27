@@ -22,5 +22,6 @@ namespace Application.Services
         Task<UserTransferCommand> GetUserById(int id);
         Task<List<UserTransferCommand>> GetUserByName(string name);
         Task<List<string>> GetLoginsByUserLogin(string login);
+        Task<string> GetUserNameByLogin(string login); 
     }
 }

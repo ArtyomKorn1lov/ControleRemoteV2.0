@@ -95,11 +95,11 @@ namespace Web.Controllers
             return claims;
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin, manager")]
         [HttpGet("is-authorized")]
-        public AuthoriseModel IsUserAuthorized()
+        public async Task<AuthoriseModel> IsUserAuthorized()
         {
-            AuthoriseModel authorise = new AuthoriseModel(User.Identity.Name, User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType));
+            AuthoriseModel authorise = new AuthoriseModel(await _userService.GetUserNameByLogin(User.Identity.Name), User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType));
             return authorise;
         }
 
