@@ -18,13 +18,11 @@ namespace Web.Controllers
     [Route("api/report")]
     public class ReportController : Controller
     {
-        private IUnitOfWork _unitOfWork;
         private IRequestService _requestService;
         private IUserService _userService;
 
-        public ReportController(IUnitOfWork unitOfWork, IRequestService requestService, IUserService userService)
+        public ReportController(IRequestService requestService, IUserService userService)
         {
-            _unitOfWork = unitOfWork;
             _requestService = requestService;
             _userService = userService;
         }

@@ -1,5 +1,5 @@
 <div class="header">
-    <div class="header__name">
+    <div [routerLink]="tragetRoute" class="header__name">
         <img class="header__image" src="assets/logo.png">
         <h1 *ngIf="accountService.currentUrl == '/'" class="name-text">Контроль удалённых сотрудников</h1>
         <h1 *ngIf="accountService.currentUrl == '/user-control'" class="name-text">Управление пользователями</h1>
@@ -9,7 +9,7 @@
         <button class="login-button" *ngIf="!accountService.userFlag" (click)="openAuthDialog()">
             <p class="caption-text">Войти</p>
         </button>
-        <h2 *ngIf="accountService.userFlag" class="regular-text">Здравствуйте, {{accountService.authorize.name}}</h2>
+        <h2 (click)="navigateWorkPage()" *ngIf="accountService.userFlag" class="regular-text -unselectable">Здравствуйте, {{accountService.authorize.name}}</h2>
         <button class="login-button" *ngIf="accountService.userFlag" (click)="logOut()">
             <p class="caption-text">Выйти</p>
         </button>

@@ -12,11 +12,21 @@ import { NoticeDialogComponent } from '../notice-dialog/notice-dialog.component'
 })
 export class HeaderComponent implements OnInit {
   public tragetRoute: string = "/";
+  public adminRoute: string = "/user-control";
+  public managerRoute: string = "/request-action"
 
   constructor(private router: Router, private dialog: MatDialog, public accountService: AccountService) { }
 
   public openAuthDialog(): void {
     const dialogRef = this.dialog.open(DialogAuthComponent);
+  }
+
+  public navigateWorkPage(): void {
+    if(this.accountService.authorize.type == "admin") {
+      this.router.navigateByUrl(this.adminRoute);
+      return;
+    }
+    this.router.navigateByUrl(this.managerRoute);
   }
 
   public logOut(): void {

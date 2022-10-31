@@ -105,7 +105,7 @@ namespace Application.Services
             for(int count = 0; count < actionPointCommands.Count; count++)
             {
                 if(hourTime != actionPointCommands[count].DateTimeAction.Hour 
-                    || (hourTime == 0 && actionPointCommands[count].DateTimeAction.Hour == 0))
+                    || (hourTime == 0 && actionPointCommands[count].DateTimeAction.Hour == 0 && count == 0))
                 {
                     hourTime = actionPointCommands[count].DateTimeAction.Hour;
                     List<ActionPointCommand> _actionPointCommands = actionPointCommands.Where(d => d.DateTimeAction.Hour == hourTime).ToList();

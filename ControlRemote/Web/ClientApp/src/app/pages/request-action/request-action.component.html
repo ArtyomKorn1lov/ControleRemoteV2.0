@@ -13,23 +13,28 @@
             </div>
             <div class="action__time-interval">
                 <h2 class="micro-text">Минуты</h2>
-                <h2 class="micro-text -filled" *ngFor="let minute of minuteArray">{{minute}}</h2>
+                <h2 class="micro-text -filled" *ngFor="let minute of minuteArray">{{printZero(minute)}}</h2>
             </div>
         </div>
         <h2 *ngIf="waitFlag" class="name-text">Получение статистики, пожалуйста подождите</h2>
-        <div class="action__account" *ngFor="let action of actions">
-            <h3 class="regular-text">{{action.userLogin}}</h3>
-            <div class="action__date" *ngFor="let date of action.commands">
-                <h4 class="regular-text">{{date.dateTimeAction.getDate()}}.{{date.dateTimeAction.getMonth()}}.{{date.dateTimeAction.getFullYear()}}</h4>
-                <div class="action__hour" *ngFor="let hour of date.commands">
-                    <h5 class="regular-text -hour">{{printZero(hour.hourTimeAction.getHours())}}</h5>
-                    <div class="action__point" *ngFor="let point of hour.commands">
-                        <div *ngIf="point.enableAction == false && point.flagImg == 0" class="action__point -usual"></div>
-                        <div *ngIf="point.enableAction == true && point.flagImg == 0" class="action__point -action"></div>
-                        <div *ngIf="point.enableAction == true && point.flagImg == 1" class="action__point -image"></div>
+        <div *ngIf="!waitFlag && actions.length != 0" class="action__scroll">
+            <div class="action__account" *ngFor="let action of actions">
+                <h3 class="regular-text">{{action.userLogin}}</h3>
+                <div class="action__date" *ngFor="let date of action.commands">
+                    <h4 class="regular-text">{{printZero(date.dateTimeAction.getDate())}}.{{printZero(date.dateTimeAction.getMonth())}}.{{date.dateTimeAction.getFullYear()}}</h4>
+                    <div class="action__hour" *ngFor="let hour of date.commands">
+                        <h5 class="regular-text -hour">{{printZero(hour.hourTimeAction.getHours())}}</h5>
+                        <div class="action__point" *ngFor="let point of hour.commands">
+                            <div *ngIf="point.enableAction == false && point.flagImg == 0" class="action__point -usual"></div>
+                            <div *ngIf="point.enableAction == true && point.flagImg == 0" class="action__point -action"></div>
+                            <div *ngIf="point.enableAction == true && point.flagImg == 1" class="action__point -action">
+                                <img class="image-icon" src="assets/icon_image.png" alt="image">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <h2 *ngIf="!waitFlag && actions.length == 0" class="name-text">Извините, ничего не найдено</h2>
     </div>
 </div>

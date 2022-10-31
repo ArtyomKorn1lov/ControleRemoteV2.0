@@ -4,6 +4,8 @@ import { AccountService } from 'src/app/services/account.service';
 import { EmployerService } from 'src/app/services/employer.service';
 import { ActionSortByUserLoginModel } from 'src/app/models/ActionSortByUserLoginModel';
 import { ReportService } from 'src/app/services/report.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NoticeDialogComponent } from 'src/app/components/notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-request-action',
@@ -20,7 +22,7 @@ export class RequestActionComponent implements OnInit {
   public endDate: string | undefined;
   public waitFlag: boolean = false;
 
-  constructor(private accountService: AccountService, private employerService: EmployerService, private reportService: ReportService, private router: Router) { }
+  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router) { }
 
   public fillMinuteArray(): void {
     for (let count = 1; count <= 60; count++)
@@ -32,8 +34,8 @@ export class RequestActionComponent implements OnInit {
       return;
     const start = new Date(this.startDate);
     const final = new Date(this.endDate);
-    if (start >= final) {
-      alert("Некорректный диапазон");
+    if (start > final) {
+      const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Некорректный диапазон" } });
       return;
     }
     this.actions = [];
@@ -76,9 +78,9 @@ export class RequestActionComponent implements OnInit {
     this.accountService.currentUrl = this.router.url;
     this.accountService.isAuthorized();
     let currentDate = new Date();
-    this.endDate = currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
+    this.endDate = currentDate.toDateString();
     currentDate.setDate(currentDate.getDate() - 1);
-    this.startDate = currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
+    this.startDate = currentDate.toDateString();
     await this.employerService.getByUserLogin().subscribe(async data => {
       this.logins = this.logins.concat(data);
     });
