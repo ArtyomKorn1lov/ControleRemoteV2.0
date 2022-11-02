@@ -11,6 +11,7 @@ using Web.Dto;
 using Web.DtoConverter;
 using Application.Command;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Web.Controllers
 {
@@ -20,11 +21,13 @@ namespace Web.Controllers
     {
         private IRequestService _requestService;
         private IUserService _userService;
+        private IWebHostEnvironment _appEnvironment;
 
-        public ReportController(IRequestService requestService, IUserService userService)
+        public ReportController(IRequestService requestService, IUserService userService, IWebHostEnvironment appEnvironment)
         {
             _requestService = requestService;
             _userService = userService;
+            _appEnvironment = appEnvironment;
         }
 
         [Authorize(Roles = "admin, manager")]
@@ -39,7 +42,7 @@ namespace Web.Controllers
             if(role == "admin")
             {
                 final = final.AddDays(1);
-                List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetAllForTime(start, final);
+                List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetAllForTime(start, final, _appEnvironment.WebRootPath);
                 List<ActionSortByUserLoginModel> actionSortByUserLoginModels = actionSortByUserLoginCommands
                     .Select(d => ActionPointDtoConverter.ConvertCommandToModel(d)).ToList();
                 if (actionSortByUserLoginModels == null)
@@ -64,7 +67,7 @@ namespace Web.Controllers
         public async Task<List<ActionSortByUserLoginModel>> GetByLoginEmployerForTime(List<string> logins, DateTime start, DateTime final)
         {
             final = final.AddDays(1);
-            List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetByLoginEmployerForTime(logins, start, final);
+            List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await _requestService.GetByLoginEmployerForTime(logins, start, final, _appEnvironment.WebRootPath);
             List<ActionSortByUserLoginModel> actionSortByUserLoginModels = actionSortByUserLoginCommands
                 .Select(d => ActionPointDtoConverter.ConvertCommandToModel(d)).ToList();
             if (actionSortByUserLoginModels == null)

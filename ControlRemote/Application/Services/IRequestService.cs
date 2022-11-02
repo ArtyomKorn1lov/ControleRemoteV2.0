@@ -9,7 +9,7 @@ namespace Application.Services
 {
     public interface IRequestService
     {
-        Task<List<ActionSortByUserLoginCommand>> GetAllForTime(DateTime startDateTime, DateTime finalDateTime);
-        Task<List<ActionSortByUserLoginCommand>> GetByLoginEmployerForTime(List<string> logins, DateTime startDateTime, DateTime finalDateTime);
+        Task<List<ActionSortByUserLoginCommand>> GetAllForTime(DateTime startDateTime, DateTime finalDateTime, string appEnvironment);
+        Task<List<ActionSortByUserLoginCommand>> GetByLoginEmployerForTime(List<string> logins, DateTime startDateTime, DateTime finalDateTime, string appEnvironment);
     }
 }

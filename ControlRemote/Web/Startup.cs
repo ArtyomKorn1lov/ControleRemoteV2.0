@@ -127,7 +127,7 @@ namespace ControlRemote
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
-            // скрип запуска одностраничного
+            // скрипт запуска одностраничного
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,

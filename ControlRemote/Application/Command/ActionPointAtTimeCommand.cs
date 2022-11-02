@@ -10,5 +10,6 @@ namespace Application.Command
     {
         public byte FlagImg { get; set; }
         public bool EnableAction { get; set; }
+        public string ImagePath { get; set; }
     }
 }

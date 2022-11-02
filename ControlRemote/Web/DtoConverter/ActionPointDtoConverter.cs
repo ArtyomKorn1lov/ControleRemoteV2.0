@@ -27,7 +27,8 @@ namespace Web.DtoConverter
                         Commands = d.Commands.Select(d => new ActionPointAtTimeModel 
                         {
                             EnableAction = d.EnableAction,
-                            FlagImg = d.FlagImg
+                            FlagImg = d.FlagImg,
+                            ImagePath = d.ImagePath
                         }).ToList()
                     }).ToList()
                 }).ToList()

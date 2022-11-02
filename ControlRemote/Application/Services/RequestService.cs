@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using Domain.IRepositories;
 using Domain.Entity;
 using Application.CommandConverter;
+using System.IO;
+using System.Text.Json;
 
 namespace Application.Services
 {
     public class RequestService : IRequestService
     {
         private const int HourFormat = 60;
+        private const string ImageConfigName = "/image-config.json";
         private IRequestRepository _requestRepository;
 
         public RequestService(IRequestRepository requestRepository)
@@ -20,13 +23,13 @@ namespace Application.Services
             _requestRepository = requestRepository;
         }
 
-        public async Task<List<ActionSortByUserLoginCommand>> GetAllForTime(DateTime startDateTime, DateTime finalDateTime)
+        public async Task<List<ActionSortByUserLoginCommand>> GetAllForTime(DateTime startDateTime, DateTime finalDateTime, string appEnvironment)
         {
             try
             {
                 List<ActionPoint> actionPoints = await _requestRepository.GetAllForTime(startDateTime, finalDateTime);
                 List<ActionPointCommand> actionPointCommands = actionPoints.Select(data => ActionPointCommandConverter.ConvertEntityToCommand(data)).ToList();
-                List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = GenerateReport(actionPointCommands);
+                List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await GenerateReport(actionPointCommands, appEnvironment);
                 return actionSortByUserLoginCommands;
             }
             catch
@@ -35,7 +38,7 @@ namespace Application.Services
             }
         }
 
-        public async Task<List<ActionSortByUserLoginCommand>> GetByLoginEmployerForTime(List<string> logins, DateTime startDateTime, DateTime finalDateTime)
+        public async Task<List<ActionSortByUserLoginCommand>> GetByLoginEmployerForTime(List<string> logins, DateTime startDateTime, DateTime finalDateTime, string appEnvironment)
         {
             try
             {
@@ -49,7 +52,7 @@ namespace Application.Services
                     actionPoints = actionPoints.Concat(await _requestRepository.GetByLoginEmployerForTime(logins[count], startDateTime, finalDateTime)).ToList();
                 }
                 List<ActionPointCommand> actionPointCommands = actionPoints.Select(data => ActionPointCommandConverter.ConvertEntityToCommand(data)).ToList();
-                List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = GenerateReport(actionPointCommands);
+                List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await GenerateReport(actionPointCommands, appEnvironment);
                 return actionSortByUserLoginCommands;
             }
             catch
@@ -58,7 +61,7 @@ namespace Application.Services
             }
         }
 
-        public List<ActionSortByUserLoginCommand> GenerateReport(List<ActionPointCommand> actionPointCommands)
+        private async Task<List<ActionSortByUserLoginCommand>> GenerateReport(List<ActionPointCommand> actionPointCommands, string appEnvironment)
         {
             List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = new List<ActionSortByUserLoginCommand>();
             string currentLogin = "";
@@ -71,14 +74,14 @@ namespace Application.Services
                     actionSortByUserLoginCommands.Add(new ActionSortByUserLoginCommand
                     {
                         UserLogin = actionPointCommands[count].UserLogin,
-                        Commands = GenerateActionSortByDateTimeCommands(_actionPointCommands)
+                        Commands = await GenerateActionSortByDateTimeCommands(_actionPointCommands, appEnvironment)
                     });
                 }
             }
             return actionSortByUserLoginCommands;
         }
 
-        public List<ActionSortByDateTimeCommand> GenerateActionSortByDateTimeCommands(List<ActionPointCommand> actionPointCommands)
+        private async Task<List<ActionSortByDateTimeCommand>> GenerateActionSortByDateTimeCommands(List<ActionPointCommand> actionPointCommands, string appEnvironment)
         {
             List<ActionSortByDateTimeCommand> actionSortByDateTimeCommands = new List<ActionSortByDateTimeCommand>();
             DateTime dateTime = new DateTime();
@@ -91,14 +94,14 @@ namespace Application.Services
                     actionSortByDateTimeCommands.Add(new ActionSortByDateTimeCommand 
                     {
                         DateTimeAction = actionPointCommands[count].DateTimeAction,
-                        Commands = GenerateActionSortByHourTimeCommands(_actionPointCommands)
+                        Commands = await GenerateActionSortByHourTimeCommands(_actionPointCommands, appEnvironment)
                     });
                 }
             }
             return actionSortByDateTimeCommands;
         }
 
-        public List<ActionSortByHourTimeCommand> GenerateActionSortByHourTimeCommands(List<ActionPointCommand> actionPointCommands)
+        private async Task<List<ActionSortByHourTimeCommand>> GenerateActionSortByHourTimeCommands(List<ActionPointCommand> actionPointCommands, string appEnvironment)
         {
             List<ActionSortByHourTimeCommand> actionSortByHourTimeCommands = new List<ActionSortByHourTimeCommand>();
             int hourTime = 0;
@@ -112,14 +115,14 @@ namespace Application.Services
                     actionSortByHourTimeCommands.Add(new ActionSortByHourTimeCommand
                     {
                         HourTimeAction = actionPointCommands[count].DateTimeAction,
-                        Commands = GenerateActionPointAtTimeCommand(_actionPointCommands)
+                        Commands = await GenerateActionPointAtTimeCommand(_actionPointCommands, appEnvironment)
                     });
                 }
             }
             return actionSortByHourTimeCommands;
         }
 
-        public List<ActionPointAtTimeCommand> GenerateActionPointAtTimeCommand(List<ActionPointCommand> actionPointCommands)
+        private async Task<List<ActionPointAtTimeCommand>> GenerateActionPointAtTimeCommand(List<ActionPointCommand> actionPointCommands, string appEnvironment)
         {
             List<ActionPointAtTimeCommand> actionPointAtTimeCommands = new List<ActionPointAtTimeCommand>();
             int minuteTime = 0;
@@ -130,11 +133,24 @@ namespace Application.Services
                 if(minuteTime == actionPointCommands[action_count].DateTimeAction.Minute 
                     || (minuteTime == 0 && actionPointCommands[action_count].DateTimeAction.Minute == 0))
                 {
-                    actionPointAtTimeCommands.Add(new ActionPointAtTimeCommand
+                    if(actionPointCommands[action_count].FlagImg == 1)
                     {
-                        FlagImg = actionPointCommands[action_count].FlagImg,
-                        EnableAction = true
-                    });
+                        actionPointAtTimeCommands.Add(new ActionPointAtTimeCommand
+                        {
+                            FlagImg = actionPointCommands[action_count].FlagImg,
+                            EnableAction = true,
+                            ImagePath = await GeneratePathToImage(actionPointCommands[action_count], appEnvironment)
+                        });
+                    }
+                    else
+                    {
+                        actionPointAtTimeCommands.Add(new ActionPointAtTimeCommand
+                        {
+                            FlagImg = actionPointCommands[action_count].FlagImg,
+                            EnableAction = true,
+                            ImagePath = null
+                        });
+                    }
                     if(action_count + 1 < actionPointCommands.Count)
                     {
                         action_count++;
@@ -150,6 +166,37 @@ namespace Application.Services
                 }
             }
             return actionPointAtTimeCommands;
+        }
+
+        private async Task<string> GeneratePathToImage(ActionPointCommand actionPointCommand, string appEnvironment)
+        {
+            try
+            {
+                string filePath = appEnvironment + ImageConfigName;
+                using (FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate))
+                {
+                    PathJsonCommand command = await JsonSerializer.DeserializeAsync<PathJsonCommand>(stream);
+                    string imagePath = command.Path + "/" + actionPointCommand.Station;
+                    string timeFolder = ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day) + "_" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "_" + actionPointCommand.DateTimeAction.Year.ToString();
+                    string imageName = actionPointCommand.UserLogin.Replace("\\", "#") + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day)
+                        + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "#" + actionPointCommand.DateTimeAction.Year.ToString()
+                        + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Hour) + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Minute)
+                        + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Second) + ".png";
+                    imagePath = imagePath + "/" + timeFolder + "/" + imageName;
+                    return imagePath;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private string ConvertToTimeFormat(int time)
+        {
+            if (time < 10)
+                return "0" + time.ToString();
+            return time.ToString();
         }
     }
 }
