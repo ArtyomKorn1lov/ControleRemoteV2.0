@@ -48,7 +48,6 @@ export class DialogRegComponent implements OnInit {
     let model = new UserCreateModel(this.name, this.login, this.password);
     await this.accountService.createUser(model).subscribe({
       next: (data) => {
-        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log(data);
         this.dialogRef.close({ result: "1" });
         return;

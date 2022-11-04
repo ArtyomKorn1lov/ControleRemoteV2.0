@@ -6,7 +6,6 @@ import { ActionSortByUserLoginModel } from 'src/app/models/ActionSortByUserLogin
 import { ReportService } from 'src/app/services/report.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from 'src/app/components/notice-dialog/notice-dialog.component';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-request-action',
@@ -23,7 +22,7 @@ export class RequestActionComponent implements OnInit {
   public endDate: string | undefined;
   public waitFlag: boolean = false;
 
-  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router, private sanitizer: DomSanitizer) { }
+  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router) { }
 
   public fillMinuteArray(): void {
     for (let count = 1; count <= 60; count++)
@@ -73,10 +72,6 @@ export class RequestActionComponent implements OnInit {
     if (hour < 10)
       return '0' + hour;
     return hour.toString();
-  }
-
-  public transform(url: string) {
-    return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 
   public setMonth(month: number): number {

@@ -61,6 +61,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 5px 12px;
+    cursor: pointer;
 }
 
 .control__text-place {
@@ -78,6 +79,7 @@
 
 .control__text-selector.-header {
     border-bottom: 1px solid #7365A2;
+    cursor: default;
 }
 
 .control__text-selector.-header:hover {

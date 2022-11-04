@@ -35,7 +35,6 @@ export class DialogEmpComponent implements OnInit {
     const employer = new EmployerCreateModel(this.managerId, this.name, this.login);
     await this.employerService.createEmployer(employer).subscribe({
       next: (data) => {
-        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log(data);
         this.dialogRef.close({ result: "1" });
         return;

@@ -100,9 +100,9 @@ export class UserControlComponent implements OnInit {
         const id = this.users[this.userIndex].id;
         await this.accountService.deleteUser(id).subscribe({
           next: async (data) => {
-            const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
             console.log(data);
             await this.ngOnInit();
+            this.employers = [];
             return;
           },
           error: (bad) => {
@@ -156,7 +156,6 @@ export class UserControlComponent implements OnInit {
         const managerId = this.users[this.userIndex].id;
         await this.employerService.removeEmployer(id).subscribe({
           next: async (data) => {
-            const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
             console.log(data);
             await this.employerService.getEmployersByManagerId(managerId).subscribe(data => {
               this.employers = data;

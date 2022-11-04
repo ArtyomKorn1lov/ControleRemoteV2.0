@@ -32,7 +32,6 @@ export class DialogEmpUpdateComponent implements OnInit {
     }
     await this.employerService.updateEmployer(this.employer).subscribe({
       next: (data) => {
-        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log(data);
         this.dialogRef.close({ result: "1" });
         return;

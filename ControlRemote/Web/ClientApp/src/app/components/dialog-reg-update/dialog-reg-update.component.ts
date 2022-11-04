@@ -48,7 +48,6 @@ export class DialogRegUpdateComponent implements OnInit {
     this.user.password = this.password;
     await this.accountService.updateUser(this.user).subscribe({
       next: (data) => {
-        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log(data);
         this.dialogRef.close({ result: "1" });
         return;

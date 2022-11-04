@@ -14,6 +14,7 @@
 
 .header__image {
     margin-right: 30px;
+    cursor: pointer;
 }
 
 .caption-text {
@@ -26,10 +27,6 @@
     color: #FFF5F2;
 }
 
-.regular-text:hover {
-    background-image: radial-gradient(ellipse farthest-corner at 50% 50%, #4c3a8a, #4c3a8a);
-}
-
 .-unselectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -37,4 +34,5 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }

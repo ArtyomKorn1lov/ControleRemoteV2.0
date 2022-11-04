@@ -32,7 +32,6 @@ export class DialogAuthComponent implements OnInit {
     let loginModel = new LoginModel(this.login, this.password);
     await this.accountService.login(loginModel).subscribe({
       next: async (data) => {
-        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Успешно" } });
         console.log("success");
         const token = data.token;
         const refreshToken = data.refreshToken;
