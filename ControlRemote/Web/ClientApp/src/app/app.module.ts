@@ -22,6 +22,7 @@ import { DialogEmpUpdateComponent } from './components/dialog-emp-update/dialog-
 import { AuthGuard } from './guards/auth.guards';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { NoticeDialogComponent } from './components/notice-dialog/notice-dialog.component';
+import { DialogImageComponent } from './components/dialog-image/dialog-image.component';
 
 export function tokenGetter() { 
   return localStorage.getItem("jwt"); 
@@ -41,7 +42,8 @@ export function tokenGetter() {
     DialogRegUpdateComponent,
     DialogEmpUpdateComponent,
     DeleteDialogComponent,
-    NoticeDialogComponent
+    NoticeDialogComponent,
+    DialogImageComponent
   ],
   imports: [
     BrowserModule,

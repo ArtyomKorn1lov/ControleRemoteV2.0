@@ -1,8 +1,6 @@
 .mat-dialog-container {
     display: flex;
     flex-direction: column;
-    min-width: 400px;
-    max-width: 800px;
     padding: 0 !important;
     border: 4px solid #333C65 !important;
     border-radius: 0px 0px 0px 78px !important;

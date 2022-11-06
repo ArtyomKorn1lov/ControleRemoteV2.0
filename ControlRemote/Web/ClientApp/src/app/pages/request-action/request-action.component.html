@@ -3,8 +3,7 @@
         <div class="action__menu">
             <div class="action__controls">
                 <h1 class="regular-text indent-right">Выбрать для просмотра:</h1>
-                <select class="select-filter flex-primary indent-right"
-                    [(ngModel)]="selectedLogin">
+                <select class="select-filter flex-primary indent-right" [(ngModel)]="selectedLogin">
                     <option class="select-filter__option" *ngFor="let login of logins" value="{{login}}">{{login}}
                     </option>
                 </select>
@@ -37,12 +36,9 @@
                             <div *ngIf="point.enableAction == true && point.flagImg == 0" class="action__point -action">
                             </div>
                             <!--Ссылка на изображение-->
-                            <a href="{{point.imagePath}}">
-                                <div *ngIf="point.enableAction == true && point.flagImg == 1"
-                                    class="action__point -action">
-                                    <img class="image-icon" src="assets/icon_image.png" alt="image">
-                                </div>
-                            </a>
+                            <div *ngIf="point.enableAction == true && point.flagImg == 1" class="action__point -action" (click)="getFile(point.imagePath)">
+                                <img class="image-icon" src="assets/icon_image.png" alt="image">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,9 @@
+.name-text {
+    margin-left: 17px;
+    color: #333C65;
+}
+
+.mat-dialog-container {
+    max-width: 100% !important;
+    min-width: 100% !important;
+}

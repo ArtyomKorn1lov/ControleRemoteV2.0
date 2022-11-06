@@ -38,10 +38,11 @@ namespace ControlRemote
             services.AddScoped<IUserService, UserService>(); // инициализация сервисов (логика приложения)
             services.AddScoped<IEmployerService, EmployerService>();
             services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddTransient<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>(); // классы базы данных
             services.AddScoped<IEmployerRepository, EmployerRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
-            services.AddTransient<ITokenService, TokenService>();
 
             // аутентификация на уровне сервера
             services.AddAuthentication(opt =>

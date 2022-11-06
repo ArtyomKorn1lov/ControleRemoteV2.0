@@ -176,12 +176,12 @@ namespace Application.Services
                 using (FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
                     PathJsonCommand command = await JsonSerializer.DeserializeAsync<PathJsonCommand>(stream);
-                    string imagePath = "file:///" + command.Path + "/" + actionPointCommand.Station;
+                    string imagePath = command.Path + "/" + actionPointCommand.Station;
                     string timeFolder = ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day) + "_" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "_" + actionPointCommand.DateTimeAction.Year.ToString();
-                    string imageName = actionPointCommand.UserLogin.Replace("\\", "%23") + "%23" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day)
-                        + "%23" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "%23" + actionPointCommand.DateTimeAction.Year.ToString()
-                        + "%23" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Hour) + "%23" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Minute)
-                        + "%23" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Second) + ".png";
+                    string imageName = actionPointCommand.UserLogin.Replace("\\", "#") + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day)
+                        + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "#" + actionPointCommand.DateTimeAction.Year.ToString()
+                        + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Hour) + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Minute)
+                        + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Second) + ".png";
                     imagePath = imagePath + "/" + timeFolder + "/" + imageName;
                     return imagePath;
                 }

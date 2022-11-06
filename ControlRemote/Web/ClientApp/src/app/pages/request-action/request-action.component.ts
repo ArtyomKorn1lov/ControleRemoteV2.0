@@ -4,8 +4,11 @@ import { AccountService } from 'src/app/services/account.service';
 import { EmployerService } from 'src/app/services/employer.service';
 import { ActionSortByUserLoginModel } from 'src/app/models/ActionSortByUserLoginModel';
 import { ReportService } from 'src/app/services/report.service';
+import { FileService } from 'src/app/services/file.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from 'src/app/components/notice-dialog/notice-dialog.component';
+import { PathModel } from 'src/app/models/PathModel';
+import { DialogImageComponent } from 'src/app/components/dialog-image/dialog-image.component';
 
 @Component({
   selector: 'app-request-action',
@@ -22,7 +25,7 @@ export class RequestActionComponent implements OnInit {
   public endDate: string | undefined;
   public waitFlag: boolean = false;
 
-  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router) { }
+  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router, private fileService: FileService) { }
 
   public fillMinuteArray(): void {
     for (let count = 1; count <= 60; count++)
@@ -76,6 +79,22 @@ export class RequestActionComponent implements OnInit {
 
   public setMonth(month: number): number {
     return month + 1;
+  }
+
+  public async getFile(path: string): Promise<void> {
+    const pathModel = new PathModel(path);
+    await this.fileService.getImage(pathModel).subscribe({
+      next: (data) => {
+        const base64 = "data:image/png;base64," + data;
+        const dialogRef = this.dialog.open(DialogImageComponent, { data: { image: base64 } });
+        return;
+      },
+      error: (bad) => {
+        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Изображения не существует" } });
+        console.log(bad);
+        return;
+      }
+    });
   }
 
   public async ngOnInit(): Promise<void> {
