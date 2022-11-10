@@ -40,6 +40,11 @@ namespace Infrastructure.Repositories
             return await _controlRemoteDbContext.Set<Employer>().FirstOrDefaultAsync(e => e.Id == id);
         }
 
+        public async Task<Employer> GetByLogin(string login)
+        {
+            return await _controlRemoteDbContext.Set<Employer>().FirstOrDefaultAsync(e => e.Login == login);
+        }
+
         public async Task<List<Employer>> GetByManagerId(int id)
         {
             return await _controlRemoteDbContext.Set<Employer>().Where(e => e.ManagerId == id).ToListAsync();

@@ -18,6 +18,7 @@ namespace Web.DtoConverter
             return new ActionSortByUserLoginModel
             {
                 UserLogin = command.UserLogin,
+                Station = command.Station,
                 Commands = command.Commands.Select(d => new ActionSortByDateTimeModel
                 {
                     DateTimeAction = d.DateTimeAction,

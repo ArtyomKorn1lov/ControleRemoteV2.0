@@ -65,6 +65,8 @@ namespace Application.Services
         {
             List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = new List<ActionSortByUserLoginCommand>();
             string currentLogin = "";
+            string currentName = "";
+            Employer employer = new Employer();
             for(int count = 0; count < actionPointCommands.Count; count++)
             {
                 if(currentLogin != actionPointCommands[count].UserLogin)
@@ -74,6 +76,7 @@ namespace Application.Services
                     actionSortByUserLoginCommands.Add(new ActionSortByUserLoginCommand
                     {
                         UserLogin = actionPointCommands[count].UserLogin,
+                        Station = actionPointCommands[count].Station,
                         Commands = await GenerateActionSortByDateTimeCommands(_actionPointCommands, appEnvironment)
                     });
                 }

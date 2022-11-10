@@ -11,6 +11,7 @@ namespace Domain.IRepositories
     {
         Task<List<Employer>> GetAll();
         Task<Employer> GetById(int id);
+        Task<Employer> GetByLogin(string login);
         Task<List<Employer>> GetByName(string name, int id);
         Task<List<Employer>> GetByManagerId(int id);
         Task Create(Employer employer);

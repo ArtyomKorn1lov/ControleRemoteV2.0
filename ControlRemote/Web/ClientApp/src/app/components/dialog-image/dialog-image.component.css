@@ -3,7 +3,11 @@
     color: #333C65;
 }
 
-.mat-dialog-container {
-    max-width: 100% !important;
-    min-width: 100% !important;
+.dialog__content {
+    padding: 0;
+}
+
+.dialog__title {
+    padding: 10px 28px;
+    justify-content: space-between;
 }

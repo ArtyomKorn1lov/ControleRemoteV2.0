@@ -81,12 +81,12 @@ export class RequestActionComponent implements OnInit {
     return month + 1;
   }
 
-  public async getFile(path: string): Promise<void> {
+  public async getFile(path: string, login: string, station: string, date: string, time: string): Promise<void> {
     const pathModel = new PathModel(path);
     await this.fileService.getImage(pathModel).subscribe({
       next: (data) => {
         const base64 = "data:image/png;base64," + data;
-        const dialogRef = this.dialog.open(DialogImageComponent, { data: { image: base64 } });
+        const dialogRef = this.dialog.open(DialogImageComponent, { data: { image: base64, station: station, login: login, date: date, time: time } });
         return;
       },
       error: (bad) => {
