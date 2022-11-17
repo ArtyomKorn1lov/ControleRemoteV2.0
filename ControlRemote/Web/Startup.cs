@@ -12,9 +12,11 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IO;
 using System.Text;
 using Web;
 using Web.TokenService;
@@ -69,11 +71,6 @@ namespace ControlRemote
                 string connectionString = Configuration.GetConnectionString("ControlConnection"); // путь к бд
                 options.UseSqlServer(connectionString); 
             });
-            // путь одностраничного приложения
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist"; // расположен клиентский код
-            });
 
             //включение запросов между разными источниками
             services.AddCors(options =>
@@ -96,24 +93,14 @@ namespace ControlRemote
                 var recipeContext = serviceScope.ServiceProvider.GetService<ControlRemoteDbContext>();
                 recipeContext.Database.Migrate();
             }
-            
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-            if (!env.IsDevelopment())
+            app.UseStaticFiles(new StaticFileOptions()
             {
-                app.UseSpaStaticFiles();
-            }
+                FileProvider = new PhysicalFileProvider(env.WebRootPath)
+            });
 
             app.UseRouting();
             app.UseAuthentication();
@@ -126,20 +113,6 @@ namespace ControlRemote
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-            });
-
-            // скрипт запуска одностраничного
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
             });
         }
     }
