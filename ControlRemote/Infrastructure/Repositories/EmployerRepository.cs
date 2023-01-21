@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Employer>> GetAll()
         {
-            return await _controlRemoteDbContext.Set<Employer>().ToListAsync();
+            return await _controlRemoteDbContext.Set<Employer>().OrderBy(e => e.Name).ToListAsync();
         }
 
         public async Task<Employer> GetById(int id)
@@ -47,13 +47,15 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Employer>> GetByManagerId(int id)
         {
-            return await _controlRemoteDbContext.Set<Employer>().Where(e => e.ManagerId == id).ToListAsync();
+            return await _controlRemoteDbContext.Set<Employer>().Where(e => e.ManagerId == id).OrderBy(e => e.Name).ToListAsync();
         }
 
         public async Task<List<Employer>> GetByName(string name, int id)
         {
             return await _controlRemoteDbContext.Set<Employer>().Where(e => 
-            (EF.Functions.Like(e.Name, "%"+name+"%") || EF.Functions.Like(e.Login, "%" + name + "%")) && e.ManagerId == id).ToListAsync();
+            (EF.Functions.Like(e.Name, "%"+name+"%") || EF.Functions.Like(e.Login, "%" + name + "%")) && e.ManagerId == id)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
         }
 
         public async Task<List<Employer>> GetByUserLogin(string login)

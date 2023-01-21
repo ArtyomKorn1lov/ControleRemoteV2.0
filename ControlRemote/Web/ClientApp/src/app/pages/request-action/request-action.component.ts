@@ -104,6 +104,8 @@ export class RequestActionComponent implements OnInit {
     this.endDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
     currentDate.setDate(currentDate.getDate() - 1);
     this.startDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
+    this.startDate = '2022-10-18';
+    this.endDate = '2022-10-18';
     await this.employerService.getByUserLogin().subscribe(async data => {
       this.logins = this.logins.concat(data);
     });

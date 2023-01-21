@@ -20,7 +20,7 @@
                         <h2 class="regular-text">Логин руководителя</h2>
                     </div>
                 </div>
-                <div *ngFor="let user of users; let currentIndex = index" (click)="setUserIndex(currentIndex)" 
+                <div *ngFor="let user of users; let currentIndex = index" (click)="setUserIndex(currentIndex)" (dblclick)="updateUser()"
                     class="control__text-selector" [ngClass]="{'-active': currentIndex == userIndex}">
                     <div class="control__text-place">
                         <h2 class="regular-text">{{user.name}}</h2>
@@ -51,7 +51,7 @@
                         <h2 class="regular-text">Логин сотрудника</h2>
                     </div>
                 </div>
-                <div *ngFor="let employer of employers; let currentIndex = index" (click)="setEmployerIndex(currentIndex)" 
+                <div *ngFor="let employer of employers; let currentIndex = index" (click)="setEmployerIndex(currentIndex)" (dblclick)="updateEmployer()"
                     class="control__text-selector" [ngClass]="{'-active': currentIndex == employerIndex}">
                     <div class="control__text-place">
                         <h2 class="regular-text">{{employer.name}}</h2>

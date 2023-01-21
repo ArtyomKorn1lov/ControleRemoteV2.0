@@ -30,6 +30,7 @@ export class UserControlComponent implements OnInit {
 
   public async setUserIndex(index: number): Promise<void> {
     this.userIndex = index;
+    this.employerIndex = undefined;
     const id = this.users[this.userIndex].id;
     await this.employerService.getEmployersByManagerId(id).subscribe(data => {
       this.employers = data;
@@ -45,8 +46,10 @@ export class UserControlComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async result => {
       if (result == undefined)
         return;
-      if (result.searchName != '')
+      if (result.searchName != '') {
         await this.searchUser(result.searchName);
+        return;
+      }
       await this.ngOnInit();
     });
   }
@@ -55,6 +58,8 @@ export class UserControlComponent implements OnInit {
     await this.accountService.getUserByName(name).subscribe(data => {
       this.users = data;
     });
+    this.employers = [];
+    this.employerIndex = undefined;
   }
 
   public openSearchEmployerDialog(): void {
@@ -64,9 +69,16 @@ export class UserControlComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async result => {
       if (result == undefined)
         return;
-      if (result.searchName != '')
+      if (result.searchName != '') {
         await this.searchEmployer(result.searchName);
-      await this.ngOnInit();
+        return;
+      }
+      if (this.userIndex != undefined) {
+        const id = this.users[this.userIndex].id;
+        await this.employerService.getEmployersByManagerId(id).subscribe(data => {
+          this.employers = data;
+        });
+      }
     });
   }
 
