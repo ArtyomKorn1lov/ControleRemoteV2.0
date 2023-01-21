@@ -12,6 +12,10 @@ export class DialogSearchComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DialogSearchComponent>) { }
 
+  public close(): void {
+    this.dialogRef.close();
+  }
+
   public async search(): Promise<void> {
     this.dialogRef.close({searchName: this.name});
   }

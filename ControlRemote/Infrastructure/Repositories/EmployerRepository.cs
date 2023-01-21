@@ -52,7 +52,8 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Employer>> GetByName(string name, int id)
         {
-            return await _controlRemoteDbContext.Set<Employer>().Where(e => EF.Functions.Like(e.Name, "%"+name+"%") && e.ManagerId == id).ToListAsync();
+            return await _controlRemoteDbContext.Set<Employer>().Where(e => 
+            (EF.Functions.Like(e.Name, "%"+name+"%") || EF.Functions.Like(e.Login, "%" + name + "%")) && e.ManagerId == id).ToListAsync();
         }
 
         public async Task<List<Employer>> GetByUserLogin(string login)

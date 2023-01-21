@@ -19,6 +19,7 @@ namespace Application.CommandConverter
             return new ActionPointCommand
             {
                 Id = actionPoint.Id,
+                UserDomain = actionPoint.UserDomain,
                 UserLogin = actionPoint.UserLogin,
                 DateTimeAction = actionPoint.DateTimeAction,
                 Station = actionPoint.Station,

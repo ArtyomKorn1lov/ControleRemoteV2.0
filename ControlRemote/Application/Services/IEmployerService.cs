@@ -11,6 +11,7 @@ namespace Application.Services
     {
         Task<List<EmployerTransferCommand>> GetAll();
         Task<EmployerTransferCommand> GetById(int id);
+        Task<EmployerTransferCommand> GetByLogin(string login);
         Task<List<EmployerTransferCommand>> GetByName(string name, int id);
         Task<List<EmployerTransferCommand>> GetByManagerId(int id);
         Task<bool> Create(EmployerCreateCommand employer);

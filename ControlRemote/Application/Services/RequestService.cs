@@ -17,10 +17,12 @@ namespace Application.Services
         private const int HourFormat = 60;
         private const string ImageConfigName = "/image-config.json";
         private IRequestRepository _requestRepository;
+        private IEmployerRepository _employerRepository;
 
-        public RequestService(IRequestRepository requestRepository)
+        public RequestService(IRequestRepository requestRepository, IEmployerRepository employerRepository)
         {
             _requestRepository = requestRepository;
+            _employerRepository = employerRepository;
         }
 
         public async Task<List<ActionSortByUserLoginCommand>> GetAllForTime(DateTime startDateTime, DateTime finalDateTime, string appEnvironment)
@@ -42,16 +44,23 @@ namespace Application.Services
         {
             try
             {
-                if(logins == null)
+                if (logins == null)
                 {
                     return null;
                 }
                 List<ActionPoint> actionPoints = new List<ActionPoint>();
-                for(int count = 0; count < logins.Count; count++)
+                for (int count = 0; count < logins.Count; count++)
                 {
                     actionPoints = actionPoints.Concat(await _requestRepository.GetByLoginEmployerForTime(logins[count], startDateTime, finalDateTime)).ToList();
                 }
-                List<ActionPointCommand> actionPointCommands = actionPoints.Select(data => ActionPointCommandConverter.ConvertEntityToCommand(data)).ToList();
+                List<ActionPointCommand> actionPointCommands = new List<ActionPointCommand>();
+                Employer employer = new Employer();
+                for (int count = 0; count < actionPoints.Count; count++)
+                {
+                    actionPointCommands.Add(ActionPointCommandConverter.ConvertEntityToCommand(actionPoints[count]));
+                    employer = await _employerRepository.GetByLogin(actionPointCommands[count].UserLogin);
+                    actionPointCommands[count].Name = employer.Name;
+                }
                 List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = await GenerateReport(actionPointCommands, appEnvironment);
                 return actionSortByUserLoginCommands;
             }
@@ -65,17 +74,18 @@ namespace Application.Services
         {
             List<ActionSortByUserLoginCommand> actionSortByUserLoginCommands = new List<ActionSortByUserLoginCommand>();
             string currentLogin = "";
-            string currentName = "";
             Employer employer = new Employer();
-            for(int count = 0; count < actionPointCommands.Count; count++)
+            for (int count = 0; count < actionPointCommands.Count; count++)
             {
-                if(currentLogin != actionPointCommands[count].UserLogin)
+                if (currentLogin != actionPointCommands[count].UserLogin)
                 {
                     currentLogin = actionPointCommands[count].UserLogin;
                     List<ActionPointCommand> _actionPointCommands = actionPointCommands.Where(d => d.UserLogin == currentLogin).ToList();
                     actionSortByUserLoginCommands.Add(new ActionSortByUserLoginCommand
                     {
+                        UserDomain = actionPointCommands[count].UserDomain,
                         UserLogin = actionPointCommands[count].UserLogin,
+                        Name = actionPointCommands[count].Name,
                         Station = actionPointCommands[count].Station,
                         Commands = await GenerateActionSortByDateTimeCommands(_actionPointCommands, appEnvironment)
                     });
@@ -88,13 +98,13 @@ namespace Application.Services
         {
             List<ActionSortByDateTimeCommand> actionSortByDateTimeCommands = new List<ActionSortByDateTimeCommand>();
             DateTime dateTime = new DateTime();
-            for(int count = 0; count < actionPointCommands.Count; count++)
+            for (int count = 0; count < actionPointCommands.Count; count++)
             {
-                if(dateTime != actionPointCommands[count].DateTimeAction.Date)
+                if (dateTime != actionPointCommands[count].DateTimeAction.Date)
                 {
                     dateTime = actionPointCommands[count].DateTimeAction.Date;
                     List<ActionPointCommand> _actionPointCommands = actionPointCommands.Where(d => d.DateTimeAction.Date == dateTime).ToList();
-                    actionSortByDateTimeCommands.Add(new ActionSortByDateTimeCommand 
+                    actionSortByDateTimeCommands.Add(new ActionSortByDateTimeCommand
                     {
                         DateTimeAction = actionPointCommands[count].DateTimeAction,
                         Commands = await GenerateActionSortByHourTimeCommands(_actionPointCommands, appEnvironment)
@@ -108,9 +118,9 @@ namespace Application.Services
         {
             List<ActionSortByHourTimeCommand> actionSortByHourTimeCommands = new List<ActionSortByHourTimeCommand>();
             int hourTime = 0;
-            for(int count = 0; count < actionPointCommands.Count; count++)
+            for (int count = 0; count < actionPointCommands.Count; count++)
             {
-                if(hourTime != actionPointCommands[count].DateTimeAction.Hour 
+                if (hourTime != actionPointCommands[count].DateTimeAction.Hour
                     || (hourTime == 0 && actionPointCommands[count].DateTimeAction.Hour == 0 && count == 0))
                 {
                     hourTime = actionPointCommands[count].DateTimeAction.Hour;
@@ -130,13 +140,13 @@ namespace Application.Services
             List<ActionPointAtTimeCommand> actionPointAtTimeCommands = new List<ActionPointAtTimeCommand>();
             int minuteTime = 0;
             int action_count = 0;
-            for(int count = 0; count < HourFormat; count++)
+            for (int count = 0; count < HourFormat; count++)
             {
                 minuteTime = count;
-                if(minuteTime == actionPointCommands[action_count].DateTimeAction.Minute 
+                if (minuteTime == actionPointCommands[action_count].DateTimeAction.Minute
                     || (minuteTime == 0 && actionPointCommands[action_count].DateTimeAction.Minute == 0))
                 {
-                    if(actionPointCommands[action_count].FlagImg == 1)
+                    if (actionPointCommands[action_count].FlagImg == 1)
                     {
                         actionPointAtTimeCommands.Add(new ActionPointAtTimeCommand
                         {
@@ -154,7 +164,7 @@ namespace Application.Services
                             ImagePath = null
                         });
                     }
-                    if(action_count + 1 < actionPointCommands.Count)
+                    if (action_count + 1 < actionPointCommands.Count)
                     {
                         action_count++;
                     }
@@ -181,7 +191,7 @@ namespace Application.Services
                     PathJsonCommand command = await JsonSerializer.DeserializeAsync<PathJsonCommand>(stream);
                     string imagePath = command.Path + "/" + actionPointCommand.Station;
                     string timeFolder = ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day) + "_" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "_" + actionPointCommand.DateTimeAction.Year.ToString();
-                    string imageName = actionPointCommand.UserLogin.Replace("\\", "#") + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day)
+                    string imageName = actionPointCommand.UserDomain + "#" + actionPointCommand.UserLogin + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Day)
                         + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Month) + "#" + actionPointCommand.DateTimeAction.Year.ToString()
                         + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Hour) + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Minute)
                         + "#" + ConvertToTimeFormat(actionPointCommand.DateTimeAction.Second) + ".png";

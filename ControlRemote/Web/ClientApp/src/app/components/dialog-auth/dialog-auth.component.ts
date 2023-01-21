@@ -18,6 +18,10 @@ export class DialogAuthComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DialogAuthComponent>, private dialog: MatDialog, private accountService: AccountService, private router: Router) { }
 
+  public close(): void {
+    this.dialogRef.close();
+  }
+  
   public async authorize(): Promise<void> {
     if (this.login == undefined || this.login.trim() == '') {
       const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите логин пользователя" } });

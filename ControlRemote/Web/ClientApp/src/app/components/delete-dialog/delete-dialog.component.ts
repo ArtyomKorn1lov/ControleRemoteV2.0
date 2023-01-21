@@ -10,6 +10,10 @@ export class DeleteDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>) { }
 
+  public close(): void {
+    this.dialogRef.close();
+  }
+
   public confirm(): void {
     this.dialogRef.close({flag: true});
   }

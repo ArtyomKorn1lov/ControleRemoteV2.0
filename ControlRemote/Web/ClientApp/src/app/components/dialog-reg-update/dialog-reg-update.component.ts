@@ -18,6 +18,10 @@ export class DialogRegUpdateComponent implements OnInit {
 
   constructor(private accountService: AccountService, private dialog: MatDialog, private dialogRef: MatDialogRef<DialogRegUpdateComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
+  public close(): void {
+    this.dialogRef.close();
+  }
+
   public async update(): Promise<void> {
     if (this.user.name == undefined || this.user.name.trim() == '') {
       const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите имя руководителя" } });

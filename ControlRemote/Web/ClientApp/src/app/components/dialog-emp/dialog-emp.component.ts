@@ -17,6 +17,10 @@ export class DialogEmpComponent implements OnInit {
 
   constructor(private employerService: EmployerService, private dialog: MatDialog, private dialogRef: MatDialogRef<DialogEmpComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
+  public close(): void {
+    this.dialogRef.close();
+  }
+
   public async create(): Promise<void> {
     if (this.name == undefined || this.name.trim() == '') {
       const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Введите имя сотрудника" } });

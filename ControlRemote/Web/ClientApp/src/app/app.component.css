@@ -12,6 +12,7 @@
 
 .page.-background {
     background-image: url("src/assets/fon.png");
+    background-size: cover;
 }
 
 .page__content {

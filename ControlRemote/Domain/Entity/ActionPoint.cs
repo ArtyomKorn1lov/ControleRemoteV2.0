@@ -10,6 +10,7 @@ namespace Domain.Entity
     public class ActionPoint
     {
         public int Id { get; set; }
+        public string UserDomain { get; set; }
         public string UserLogin { get; set; }
         public DateTime DateTimeAction { get; set; }
         public string Station { get; set; }

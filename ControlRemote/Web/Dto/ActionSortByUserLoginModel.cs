@@ -7,7 +7,9 @@ namespace Web.Dto
 {
     public class ActionSortByUserLoginModel
     {
+        public string UserDomain { get; set; }
         public string UserLogin { get; set; }
+        public string Name { get; set; }
         public string Station { get; set; }
         public List<ActionSortByDateTimeModel> Commands { get; set; }
     }

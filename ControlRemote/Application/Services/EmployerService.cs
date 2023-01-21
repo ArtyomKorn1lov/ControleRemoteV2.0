@@ -90,6 +90,19 @@ namespace Application.Services
             }
         }
 
+        public async Task<EmployerTransferCommand> GetByLogin(string login)
+        {
+            try
+            {
+                EmployerTransferCommand employerCommand = EmployerCommandConverter.EmployerEntityConvertToEmployerTransferCommand(await _employerRepository.GetByLogin(login));
+                return employerCommand;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<List<EmployerTransferCommand>> GetByManagerId(int id)
         {
             try

@@ -23,7 +23,7 @@
         <h2 *ngIf="waitFlag" class="name-text">Получение статистики, пожалуйста подождите</h2>
         <div *ngIf="!waitFlag && actions.length != 0" class="action__scroll">
             <div class="action__account" *ngFor="let action of actions">
-                <h3 class="regular-text">{{action.userLogin}}|{{action.station}}</h3>
+                <h3 class="regular-text">{{action.name}}|{{action.userDomain}}|{{action.userLogin}}|{{action.station}}</h3>
                 <div class="action__date" *ngFor="let date of action.commands">
                     <h4 class="regular-text">
                         {{printZero(date.dateTimeAction.getDate())}}.{{printZero(setMonth(date.dateTimeAction.getMonth()))}}.{{date.dateTimeAction.getFullYear()}}
@@ -36,7 +36,7 @@
                             <div *ngIf="point.enableAction == true && point.flagImg == 0" class="action__point -action">
                             </div>
                             <div *ngIf="point.enableAction == true && point.flagImg == 1" class="action__point -action"
-                                (click)="getFile(point.imagePath, action.userLogin, action.station, printZero(date.dateTimeAction.getDate())+'.'+printZero(setMonth(date.dateTimeAction.getMonth()))+'.'+date.dateTimeAction.getFullYear(), printZero(hour.hourTimeAction.getHours())+':'+printZero(i))">
+                                (click)="getFile(point.imagePath, action.userDomain, action.userLogin, action.name, action.station, printZero(date.dateTimeAction.getDate())+'.'+printZero(setMonth(date.dateTimeAction.getMonth()))+'.'+date.dateTimeAction.getFullYear(), printZero(hour.hourTimeAction.getHours())+':'+printZero(i))">
                                 <img class="image-icon" src="assets/icon_image.png" alt="image">
                             </div>
                         </div>

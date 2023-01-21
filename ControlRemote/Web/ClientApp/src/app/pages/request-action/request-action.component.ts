@@ -81,12 +81,12 @@ export class RequestActionComponent implements OnInit {
     return month + 1;
   }
 
-  public async getFile(path: string, login: string, station: string, date: string, time: string): Promise<void> {
+  public async getFile(path: string, domain: string, login: string, name: string, station: string, date: string, time: string): Promise<void> {
     const pathModel = new PathModel(path);
     await this.fileService.getImage(pathModel).subscribe({
       next: (data) => {
         const base64 = "data:image/png;base64," + data;
-        const dialogRef = this.dialog.open(DialogImageComponent, { data: { image: base64, station: station, login: login, date: date, time: time } });
+        const dialogRef = this.dialog.open(DialogImageComponent, { data: { image: base64, domain: domain, name: name, station: station, login: login, date: date, time: time } });
         return;
       },
       error: (bad) => {
@@ -101,9 +101,9 @@ export class RequestActionComponent implements OnInit {
     this.accountService.currentUrl = this.router.url;
     this.accountService.isAuthorized();
     let currentDate = new Date();
-    this.endDate = currentDate.toDateString();
+    this.endDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
     currentDate.setDate(currentDate.getDate() - 1);
-    this.startDate = currentDate.toDateString();
+    this.startDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
     await this.employerService.getByUserLogin().subscribe(async data => {
       this.logins = this.logins.concat(data);
     });

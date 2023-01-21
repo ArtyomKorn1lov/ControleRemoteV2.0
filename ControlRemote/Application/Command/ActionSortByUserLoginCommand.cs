@@ -8,7 +8,9 @@ namespace Application.Command
 {
     public class ActionSortByUserLoginCommand
     {
+        public string UserDomain { get; set; }
         public string UserLogin { get; set; }
+        public string Name { get; set; }
         public string Station { get; set; }
         public List<ActionSortByDateTimeCommand> Commands { get; set; }
     }

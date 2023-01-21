@@ -17,6 +17,10 @@ export class DialogRegComponent implements OnInit {
   public confirmPassword: string = "";
 
   constructor(private accountService: AccountService, private dialog: MatDialog, private dialogRef: MatDialogRef<DialogRegComponent>) { }
+  
+  public close(): void {
+    this.dialogRef.close();
+  }
 
   public async create(): Promise<void> {
     if (this.name == undefined || this.name.trim() == '') {
