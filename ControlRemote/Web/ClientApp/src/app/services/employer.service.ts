@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EmployerModel } from '../models/EmployerModel';
 import { EmployerCreateModel } from '../models/EmployerCreateModel';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployerService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   public pushEmployerId(id: number): void {
     sessionStorage.setItem("EmployerId", id.toString());
@@ -50,34 +51,42 @@ export class EmployerService {
   }
 
   public getEmployers(): Observable<EmployerModel[]> {
+    this.tokenService.tokenVerify();
     return this.http.get<EmployerModel[]>(`api/employer/employer-list`);
   }
 
   public getEmployerById(id: number): Observable<EmployerModel> {
+    this.tokenService.tokenVerify();
     return this.http.get<EmployerModel>(`api/employer/by-id/${id}`);
   }
 
   public getEmployerByName(name: string, id: number): Observable<EmployerModel[]> {
+    this.tokenService.tokenVerify();
     return this.http.get<EmployerModel[]>(`api/employer/by-name/${name}/${id}`);
   }
 
   public getEmployersByManagerId(id: number): Observable<EmployerModel[]> {
+    this.tokenService.tokenVerify();
     return this.http.get<EmployerModel[]>(`api/employer/by-manager-id/${id}`);
   }
 
   public createEmployer(employer: EmployerCreateModel): Observable<string> {
+    this.tokenService.tokenVerify();
     return this.http.post(`api/employer/create`, employer, { responseType: 'text' });
   }
 
   public updateEmployer(employer: EmployerModel): Observable<string> {
+    this.tokenService.tokenVerify();
     return this.http.put(`api/employer/update`, employer, { responseType: 'text' });
   }
 
   public removeEmployer(id: number): Observable<string> {
+    this.tokenService.tokenVerify();
     return this.http.delete(`api/employer/remove/${id}`, { responseType: 'text' });
   }
 
   public getByUserLogin(): Observable<string[]> {
+    this.tokenService.tokenVerify();
     return this.http.get<string[]>(`api/employer/by-user-login`);
   }
 

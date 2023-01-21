@@ -99,7 +99,7 @@ export class RequestActionComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     this.accountService.currentUrl = this.router.url;
-    this.accountService.isAuthorized();
+    this.accountService.getAuthoriseModel();
     let currentDate = new Date();
     this.endDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
     currentDate.setDate(currentDate.getDate() - 1);

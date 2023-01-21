@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Web.TokenService
+namespace Application.Services
 {
     public interface ITokenService
     {

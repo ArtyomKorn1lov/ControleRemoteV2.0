@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { firstValueFrom, Observable } from "rxjs";
 import { LoginModel } from '../models/LoginModel';
-import { RegisterModel } from '../models/RegisterModel';
 import { AuthoriseModel } from '../models/AuthoriseModel';
 import { UserModel } from '../models/UserModel';
 import { UserCreateModel } from '../models/UserCreateModel';
 import { UserUpdateModel } from '../models/UserUpdateModel';
 import { AuthenticatedResponse } from '../models/AuthenticatedResponse';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class AccountService {
   public authorize: AuthoriseModel = new AuthoriseModel("", "");
   public currentUrl: string = "/";
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
+  constructor(private http: HttpClient, private jwtHelper: JwtHelperService, private tokenService: TokenService) { }
 
   public pushFlag(flag: number): void {
     sessionStorage.setItem('UserFlag', flag.toString());
@@ -76,10 +76,6 @@ export class AccountService {
       this.userFlag = false;
   }
 
-  public registration(user: RegisterModel): Observable<string> {
-    return this.http.post(`api/account/register`, user, { responseType: 'text' });
-  }
-
   public login(user: LoginModel): Observable<AuthenticatedResponse> {
     return this.http.post<AuthenticatedResponse>(`api/account/login`, user, { headers: new HttpHeaders({ "Content-Type": "application/json" }) });
   }
@@ -96,31 +92,56 @@ export class AccountService {
     }
   }
 
+  public async getAuthoriseModel(): Promise<void> {
+    await this.tokenService.tokenVerify();
+    await this.getAuthorizeModel().subscribe({
+      next: (data) => {
+        if (data != null) {
+          this.authorize = data;
+          this.userFlag = true;
+          return;
+        }
+        this.authorize = new AuthoriseModel("", "");
+        this.userFlag = false;
+      },
+      error: (bad) => {
+        this.authorize = new AuthoriseModel("", "");
+        this.userFlag = false;
+      }
+    });
+  }
+
   public getAuthorizeModel(): Observable<AuthoriseModel> {
     return this.http.get<AuthoriseModel>(`api/account/is-authorized`);
   }
 
   public getUsers(): Observable<UserModel[]> {
+    this.tokenService.tokenVerify();
     return this.http.get<UserModel[]>(`api/account/user-list`);
   }
 
   public createUser(user: UserCreateModel): Observable<string> {
+    this.tokenService.tokenVerify();
     return this.http.post(`api/account/create`, user, { responseType: 'text' });
   }
 
   public updateUser(user: UserUpdateModel): Observable<string> {
+    this.tokenService.tokenVerify();
     return this.http.put(`api/account/update`, user, { responseType: 'text' });
   }
 
   public deleteUser(id: number): Observable<string> {
+    this.tokenService.tokenVerify();
     return this.http.delete(`api/account/remove/${id}`, { responseType: 'text' });
   }
 
   public getUserById(id: number): Observable<UserModel> {
+    this.tokenService.tokenVerify();
     return this.http.get<UserModel>(`api/account/by-id/${id}`);
   }
 
   public getUserByName(name: string): Observable<UserModel[]> {
+    this.tokenService.tokenVerify();
     return this.http.get<UserModel[]>(`api/account/by-name/${name}`);
   }
 }

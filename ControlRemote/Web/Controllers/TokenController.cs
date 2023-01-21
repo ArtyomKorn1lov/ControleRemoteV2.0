@@ -7,7 +7,6 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Dto;
-using Web.TokenService;
 
 namespace Web.Controllers
 {

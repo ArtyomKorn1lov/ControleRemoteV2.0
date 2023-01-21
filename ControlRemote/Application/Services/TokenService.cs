@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Web.TokenService
+namespace Application.Services
 {
     public class TokenService : ITokenService
     {
@@ -18,7 +18,7 @@ namespace Web.TokenService
                 issuer: "https://localhost:5001",
                 audience: "https://localhost:5001",
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddMinutes(3),
                 signingCredentials: signinCredentials
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
