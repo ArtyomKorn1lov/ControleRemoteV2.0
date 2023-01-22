@@ -11,7 +11,7 @@
     </div>
     <div class="dialog__content">
         <img class="dialog__image" src="{{imageBase64}}" alt="Скриншот активности">
-        <div class="dialog__navigation-block -left"><img class="dialog_arrow" src="assets/arrowcircleleft.png"></div>
-        <div class="dialog__navigation-block -right"><img class="dialog_arrow" src="assets/arrowcircleright.png"></div>
+        <div class="dialog__navigation-block -left"><img (click)="prevImage()" class="dialog_arrow" src="assets/arrowcircleleft.png"></div>
+        <div class="dialog__navigation-block -right"><img (click)="nextImage()" class="dialog_arrow" src="assets/arrowcircleright.png"></div>
     </div>
 </div>

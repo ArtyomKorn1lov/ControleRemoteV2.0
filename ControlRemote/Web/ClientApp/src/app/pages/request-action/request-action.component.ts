@@ -7,8 +7,9 @@ import { ReportService } from 'src/app/services/report.service';
 import { FileService } from 'src/app/services/file.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from 'src/app/components/notice-dialog/notice-dialog.component';
-import { PathModel } from 'src/app/models/PathModel';
 import { DialogImageComponent } from 'src/app/components/dialog-image/dialog-image.component';
+import { ModelImageStatistic } from 'src/app/models/ModelImageStatistic';
+import { ActionSortByHourTimeModel } from 'src/app/models/ActionSortByHourTimeModel';
 
 @Component({
   selector: 'app-request-action',
@@ -25,7 +26,7 @@ export class RequestActionComponent implements OnInit {
   public endDate: string | undefined;
   public waitFlag: boolean = false;
 
-  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router, private fileService: FileService) { }
+  constructor(private accountService: AccountService, private employerService: EmployerService, private dialog: MatDialog, private reportService: ReportService, private router: Router) { }
 
   public fillMinuteArray(): void {
     for (let count = 1; count <= 60; count++)
@@ -81,31 +82,35 @@ export class RequestActionComponent implements OnInit {
     return month + 1;
   }
 
-  public async getFile(path: string, domain: string, login: string, name: string, station: string, date: string, time: string): Promise<void> {
-    const pathModel = new PathModel(path);
-    await this.fileService.getImage(pathModel).subscribe({
-      next: (data) => {
-        const base64 = "data:image/png;base64," + data;
-        const dialogRef = this.dialog.open(DialogImageComponent, { data: { image: base64, domain: domain, name: name, station: station, login: login, date: date, time: time } });
-        return;
-      },
-      error: (bad) => {
-        const aletDialog = this.dialog.open(NoticeDialogComponent, { data: { message: "Изображения не существует" } });
-        console.log(bad);
-        return;
+  public getFile(domain: string, login: string, name: string, station: string, date: string, j: number, i: number, commands: ActionSortByHourTimeModel[]): void {
+    const imageModel = this.destroyEmptyPathObjects(commands);
+    const dialogRef = this.dialog.open(DialogImageComponent, { data: { domain: domain, name: name, station: station, login: login, date: date, j: j, i: i, imageModel: imageModel } });
+  }
+
+  private destroyEmptyPathObjects(commands: ActionSortByHourTimeModel[]): ModelImageStatistic[] {
+    let newCommands: ModelImageStatistic[] = [];
+    let hour = commands[0].hourTimeAction.getHours() - 1;
+    let minute;
+    for (let count_i = 0; count_i < commands.length; count_i++) {
+      minute = 0;
+      hour++;
+      for (let count_j = 0; count_j < commands[count_i].commands.length; count_j++) {
+        minute++;
+        if (commands[count_i].commands[count_j].imagePath != null) {
+          newCommands.push(new ModelImageStatistic(hour, minute, count_i, count_j, commands[count_i].commands[count_j].imagePath));
+        }
       }
-    });
+    }
+    return newCommands;
   }
 
   public async ngOnInit(): Promise<void> {
     this.accountService.currentUrl = this.router.url;
     this.accountService.getAuthoriseModel();
     let currentDate = new Date();
-    this.endDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
+    this.endDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth() + 1) + "-" + this.printZero(currentDate.getDate());
     currentDate.setDate(currentDate.getDate() - 1);
-    this.startDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth()+1) + "-" + this.printZero(currentDate.getDate());
-    this.startDate = '2022-10-18';
-    this.endDate = '2022-10-18';
+    this.startDate = currentDate.getFullYear() + "-" + this.printZero(currentDate.getMonth() + 1) + "-" + this.printZero(currentDate.getDate());
     await this.employerService.getByUserLogin().subscribe(async data => {
       this.logins = this.logins.concat(data);
     });
